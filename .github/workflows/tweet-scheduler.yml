@@ -3,9 +3,9 @@ name: Twitter Bot Scheduler
 on:
   schedule:
     # Führe den Bot um 9:00 und 18:00 Uhr UTC aus
-    - cron: "0 9 * * *"
+    - cron: "0 11 * * *"
     - cron: "0 18 * * *"
-
+      workflow_dispatch:
 jobs:
   tweet:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Tweet posten
+    - name: Bot ausführen
       env:
         BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
         API_KEY: ${{ secrets.API_KEY }}
