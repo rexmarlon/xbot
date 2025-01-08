@@ -31,4 +31,5 @@ jobs:
         API_SECRET: ${{ secrets.API_SECRET }}
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: python bot.py
