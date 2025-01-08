@@ -1,26 +1,63 @@
 import tweepy
+import openai
 import os
+import random
 
-# Debug: Zeige die Umgebungsvariablen
-print("BEARER_TOKEN:", os.getenv("BEARER_TOKEN"))
-print("API_KEY:", os.getenv("API_KEY"))
-print("API_SECRET:", os.getenv("API_SECRET"))
-print("ACCESS_TOKEN:", os.getenv("ACCESS_TOKEN"))
-print("ACCESS_SECRET:", os.getenv("ACCESS_SECRET"))
+# OpenAI API-Key laden
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Twitter API-Schlüssel aus Umgebungsvariablen laden
 client = tweepy.Client(
+    bearer_token=os.getenv("BEARER_TOKEN"),
     consumer_key=os.getenv("API_KEY"),
     consumer_secret=os.getenv("API_SECRET"),
     access_token=os.getenv("ACCESS_TOKEN"),
     access_token_secret=os.getenv("ACCESS_SECRET"),
 )
 
-# Versuche, einen Tweet zu posten
-try:
-    response = client.create_tweet(text="Hallo von der v2 API!")
-    print("Tweet erfolgreich:", response)
-except tweepy.errors.Unauthorized as e:
-    print("Fehler: Unauthorized (401). Bitte überprüfe die API-Schlüssel und Berechtigungen.")
-except Exception as e:
-    print("Ein anderer Fehler ist aufgetreten:", e)
+# Themen aus Inhaltsverzeichnis laden
+def extract_topics(file_path="Huntmon-Whitepaper.txt"):
+    topics = []
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip().lower().startswith("chapter") or line.strip().lower().startswith("faq"):
+                topics.append(line.strip())
+    return topics
+
+# Zufälliges Thema auswählen
+def choose_random_topic(topics):
+    return random.choice(topics)
+
+# Tweet generieren
+def generate_tweet(topic, discord_link="https://discord.gg/hVjpvDBWBu"):
+    prompt = f"""
+    Schreibe einen kurzen, interessanten Tweet basierend auf folgendem Thema:
+    {topic}
+
+    Füge relevante Hashtags wie #Huntmon, #Blockchain, #Gaming hinzu und lade die Leser ein, mehr auf dem Discord-Server zu erfahren.
+    """
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=100,
+        temperature=0.7,
+    )
+    tweet = response.choices[0].text.strip()
+    return f"{tweet}\n\n🌟 Erfahre mehr auf unserem Discord: {discord_link}"
+
+# Hauptfunktion: Tweet posten
+def post_tweet():
+    try:
+        topics = extract_topics()
+        random_topic = choose_random_topic(topics)
+        tweet = generate_tweet(random_topic)
+        
+        # Tweet posten
+        response = client.create_tweet(text=tweet)
+        print("Tweet erfolgreich gepostet:", response)
+    except Exception as e:
+        print("Ein Fehler ist aufgetreten:", e)
+
+# Bot ausführen
+if __name__ == "__main__":
+    post_tweet()
