@@ -1,7 +1,6 @@
 import tweepy
 import openai
 import os
-import random
 
 # OpenAI API-Key laden
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -15,49 +14,65 @@ client = tweepy.Client(
     access_token_secret=os.getenv("ACCESS_SECRET"),
 )
 
-# Themen aus Inhaltsverzeichnis laden
-def extract_topics(file_path="Huntmon-Whitepaper.txt"):
-    topics = []
-    with open(file_path, "r", encoding="utf-8") as f:
-        for line in f:
-            if line.strip().lower().startswith("chapter") or line.strip().lower().startswith("faq"):
-                topics.append(line.strip())
-    return topics
+# Den Inhalt des Whitepapers laden
+def load_whitepaper(file_path="Huntmon-Whitepaper.txt"):
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            return file.read()
+    except FileNotFoundError:
+        print("Fehler: Whitepaper-Datei nicht gefunden.")
+        return None
+    except Exception as e:
+        print(f"Fehler beim Laden der Whitepaper-Datei: {e}")
+        return None
 
-# Zufälliges Thema auswählen
-def choose_random_topic(topics):
-    return random.choice(topics)
-
-# Tweet generieren
-def generate_tweet(topic, discord_link="https://discord.gg/hVjpvDBWBu"):
+# GPT-gestütztes Tweet-Generieren
+def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBWBu"):
     prompt = f"""
-    Schreibe einen kurzen, interessanten Tweet basierend auf folgendem Thema:
-    {topic}
-
-    Füge relevante Hashtags wie #Huntmon, #Blockchain, #Gaming hinzu und lade die Leser ein, mehr auf dem Discord-Server zu erfahren.
+    Du bist ein kreativer Social-Media-Manager für Huntmon. Wähle ein spannendes Thema aus dem folgenden Text über Huntmon:
+    
+    {whitepaper_content}
+    
+    Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte neugierig machen, Leser dazu einladen, dem Discord-Server beizutreten, und relevante Hashtags wie #Huntmon, #Blockchain, #Gaming enthalten.
     """
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=100,
-        temperature=0.7,
-    )
-    tweet = response.choices[0].text.strip()
-    return f"{tweet}\n\n🌟 Erfahre mehr auf unserem Discord: {discord_link}"
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a creative social media assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=100,
+            temperature=0.7,
+        )
+        tweet = response["choices"][0]["message"]["content"].strip()
+        return f"{tweet}\n\n🌟 Join our Discord: {discord_link}"
+    except Exception as e:
+        print("Fehler bei der Generierung des Tweets mit GPT:", e)
+        return "Explore the world of Huntmon! 🌟 Join our Discord: https://discord.gg/hVjpvDBWBu"
 
 # Hauptfunktion: Tweet posten
 def post_tweet():
     try:
-        topics = extract_topics()
-        random_topic = choose_random_topic(topics)
-        tweet = generate_tweet(random_topic)
+        whitepaper_content = load_whitepaper()
+        if not whitepaper_content:
+            print("Kein Whitepaper-Inhalt verfügbar. Standard-Tweet wird verwendet.")
+            tweet = "Explore the world of Huntmon! 🌟 Join our Discord: https://discord.gg/hVjpvDBWBu"
+        else:
+            tweet = generate_tweet(whitepaper_content)
         
         # Tweet posten
         response = client.create_tweet(text=tweet)
-        print("Tweet erfolgreich gepostet:", response)
+        print("Tweet erfolgreich gepostet:", response.data)
+    except tweepy.errors.Forbidden as e:
+        if "duplicate" in str(e).lower():
+            print("Tweet wurde nicht gepostet, da er bereits existiert.")
+        else:
+            print("Ein Fehler ist aufgetreten beim Posten des Tweets:", e)
     except Exception as e:
-        print("Ein Fehler ist aufgetreten:", e)
+        print("Ein Fehler ist aufgetreten beim Posten des Tweets:", e)
 
 # Bot ausführen
 if __name__ == "__main__":
+    print(f"OpenAI-Bibliothek Version: {openai.__version__}")
     post_tweet()
