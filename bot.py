@@ -1,27 +1,26 @@
 import tweepy
-import time
+import os
 
-# Twitter API-Schlüssel
-API_KEY = "vsi6YMdcMXbsaBLvBs3qQTnIE"
-API_SECRET = "cXEUjBboAJrLWmNMzwZeaihcAdXeA9nZOg4CP2Ps0ETrQnlgQG"
-ACCESS_TOKEN = "1863572815405887488-pvQDFDfEsmdmwqxzvMgQfgfYz594eN"
-ACCESS_SECRET = "U9eszFrb5hF2mvBv8552ige3GFKqJDAnIak2XkcQhNneZ"
+# Debug: Zeige die Umgebungsvariablen
+print("BEARER_TOKEN:", os.getenv("BEARER_TOKEN"))
+print("API_KEY:", os.getenv("API_KEY"))
+print("API_SECRET:", os.getenv("API_SECRET"))
+print("ACCESS_TOKEN:", os.getenv("ACCESS_TOKEN"))
+print("ACCESS_SECRET:", os.getenv("ACCESS_SECRET"))
 
-# Twitter API authentifizieren
-auth = tweepy.OAuthHandler(API_KEY, API_SECRET)
-auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-api = tweepy.API(auth)
+# Twitter API-Schlüssel aus Umgebungsvariablen laden
+client = tweepy.Client(
+    consumer_key=os.getenv("API_KEY"),
+    consumer_secret=os.getenv("API_SECRET"),
+    access_token=os.getenv("ACCESS_TOKEN"),
+    access_token_secret=os.getenv("ACCESS_SECRET"),
+)
 
-# Funktion, um Tweets zu posten
-def post_tweet():
-    try:
-        tweet = "Hallo Welt! Das ist ein automatischer Tweet! 🌍"
-        api.update_status(tweet)
-        print("Tweet gepostet!")
-    except Exception as e:
-        print("Fehler:", e)
-
-# Bot ausführen (alle 10 Minuten ein Tweet posten)
-while True:
-    post_tweet()
-    time.sleep(600)  # 600 Sekunden = 10 Minuten
+# Versuche, einen Tweet zu posten
+try:
+    response = client.create_tweet(text="Hallo von der v2 API!")
+    print("Tweet erfolgreich:", response)
+except tweepy.errors.Unauthorized as e:
+    print("Fehler: Unauthorized (401). Bitte überprüfe die API-Schlüssel und Berechtigungen.")
+except Exception as e:
+    print("Ein anderer Fehler ist aufgetreten:", e)
