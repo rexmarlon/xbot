@@ -2,7 +2,7 @@ name: Twitter Bot Scheduler
 
 on:
   schedule:
-    # Führe den Bot um 9:00 und 18:00 Uhr UTC aus
+    # Führe den Bot um 11:00 und 18:00 Uhr UTC aus
     - cron: "0 11 * * *"
     - cron: "0 18 * * *"
       workflow_dispatch:
