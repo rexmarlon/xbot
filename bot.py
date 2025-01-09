@@ -14,17 +14,6 @@ client = tweepy.Client(
     access_token_secret=os.getenv("ACCESS_SECRET"),
 )
 
-# Den Inhalt des Whitepapers laden
-def load_whitepaper(file_path="Huntmon-Whitepaper.txt"):
-    try:
-        with open(file_path, "r", encoding="utf-8") as file:
-            return file.read()
-    except FileNotFoundError:
-        print("Fehler: Whitepaper-Datei nicht gefunden.")
-        return None
-    except Exception as e:
-        print(f"Fehler beim Laden der Whitepaper-Datei: {e}")
-        return None
 
 # GPT-gestütztes Tweet-Generieren
 def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBWBu"):
@@ -52,12 +41,7 @@ def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBW
 # Hauptfunktion: Tweet posten
 def post_tweet():
     try:
-        whitepaper_content = load_whitepaper()
-        if not whitepaper_content:
-            print("Kein Whitepaper-Inhalt verfügbar. Standard-Tweet wird verwendet.")
-            tweet = "Explore the world of Huntmon! 🌟 Join our Discord: https://discord.gg/hVjpvDBWBu"
-        else:
-            tweet = generate_tweet(whitepaper_content)
+        tweet = generate_tweet(generate_tweet)
         
         # Tweet posten
         response = client.create_tweet(text=tweet)
