@@ -5,7 +5,7 @@ hunting game
 Release date: 17.12.2024
 Domain: www.huntmon.com
 Version: 1.0
-Table of contents
+
 
 2. Market analysis
 Current market for mobile games
