@@ -29,9 +29,7 @@ def load_whitepaper(file_path="Huntmon-Whitepaper.txt"):
 # GPT-gestütztes Tweet-Generieren
 def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBWBu"):
     prompt = f"""
-    Du bist ein kreativer Social-Media-Manager für Huntmon. Wähle ein spannendes Thema aus dem folgenden Text über Huntmon:
-    
-    {whitepaper_content}
+    Du bist ein kreativer Social-Media-Manager für Huntmon. Wähle ein spannendes Thema aus dem whitepaper über Huntmon.
     
     Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte neugierig machen, Leser dazu einladen, dem Discord-Server beizutreten, und relevante Hashtags wie #Huntmon, #Blockchain, #Gaming enthalten.
     """
