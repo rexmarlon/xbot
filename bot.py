@@ -1,28 +1,25 @@
+import tweepy
 import openai
+import os
 
-openai.api_key = "DEIN_API_KEY"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBWBu"):
-    prompt = f"""
-    Du bist ein kreativer Social-Media-Manager für Huntmon...
-    Hier der Whitepaper-Inhalt:
-    {whitepaper_content}
-    ...
-    """
+client = tweepy.Client(
+    bearer_token=os.getenv("BEARER_TOKEN"),
+    consumer_key=os.getenv("API_KEY"),
+    consumer_secret=os.getenv("API_SECRET"),
+    access_token=os.getenv("ACCESS_TOKEN"),
+    access_token_secret=os.getenv("ACCESS_SECRET"),
+)
 
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a creative social media assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=100,
-            temperature=0.7,
-        )
-        tweet = response["choices"][0]["message"]["content"].strip()
-        return f"{tweet}\n\n🌟 Join our Discord: {discord_link}"
+def generate_tweet(...):
+    # ... GPT-Logik ...
+    return tweet_text
 
-    except Exception as e:
-        print("Fehler bei der Generierung des Tweets mit GPT:", e)
-        return "Explore the world of Huntmon! 🌟 Join our Discord: https://discord.gg/hVjpvDBWBu"
+def post_tweet():
+    tweet_text = generate_tweet(...)
+    response = client.create_tweet(text=tweet_text)
+    print("Tweet erfolgreich gepostet:", response.data)
+
+if __name__ == "__main__":
+    post_tweet()
