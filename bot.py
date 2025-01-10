@@ -67,9 +67,9 @@ Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte:
 - Informativ sein.
 - Leser neugierig machen.
 - Abwechslungsreiche Formulierungen verwenden.
-- Relevante Hashtags wie #Huntmon, #BlockchainGaming, #NFTGaming, #CryptoGaming, #PlayToEarn, #ARGaming enthalten.
+- Relevante Hashtags wie #Huntmon, #BlockchainGaming, #NFTGaming, #CryptoGaming, #PlayToEarn, #ARGaming enthalten oder andere die zum Inhalt des Textes gerade passen und hype sind und leute anzieht und interessante Nischen.
 
-Verwende frische und originelle Ansätze, um das Interesse der Zielgruppe zu wecken. Beginne den Tweet mit einer fesselnden Frage, einem starken Call-to-Action oder einer ungewöhnlichen Aussage.
+Verwende frische und originelle Ansätze, um das Interesse der Zielgruppe zu wecken. Beginne den Tweet mit einer fesselnden Frage, einem starken Call-to-Action oder einer ungewöhnlichen Aussage. Wichtig: Achte darauf den Tweet weniger als 280 Zeichen lang ist und in ein Tweet passt von der länge.
 """
 
     try:
