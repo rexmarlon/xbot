@@ -1,0 +1,61 @@
+Kapitel 9: Governance-System
+Kapitel 9 beschreibt das Governance-System von Huntmon, das den Spielern und Token-Inhabern ermöglicht, demokratisch über die Entwicklung und Verwaltung des Spiels abzustimmen. Das System garantiert Transparenz, Mitbestimmung und Nachhaltigkeit.
+
+Struktur des Governance-Systems
+Das Governance-System besteht aus zwei Gremien:
+
+Oberhaus (Rat der $HMON-Inhaber):
+
+Repräsentation: Inhaber von $HMON-Governance-Tokens.
+Stimmgewichtung: Logarithmisch basierend auf der Anzahl der gehaltenen Tokens.
+Aufgaben: Entscheidungen zu wirtschaftlichen Aspekten, Budget, Tokenomics und wichtigen Updates.
+Unterhaus (Spielerrat):
+
+Repräsentation: Alle aktiven Spieler, unabhängig von ihrer Investitionshöhe.
+Stimmgewichtung: „One Player, One Vote“.
+Aufgaben: Entscheidungen zu Gameplay-Elementen, Community-Features und Team-Feedback.
+Abstimmungsprozesse
+Das Governance-System gewährleistet klare und demokratische Entscheidungsprozesse:
+
+Vorschlagseinreichung:
+
+Spieler oder $HMON-Inhaber können Vorschläge einreichen.
+Eine Mindestanzahl an Unterstützern (z. B. 10 % der Spieler oder $HMON-Inhaber) ist erforderlich.
+Diskussionsphase:
+
+Offene Diskussionen über Vorschläge (z. B. 7 Tage), um Feedback zu sammeln und Anpassungen vorzunehmen.
+Abstimmung:
+
+Quorum: Mindestens 20 % der Stimmberechtigten müssen teilnehmen.
+Mehrheit: Zustimmung in beiden Häusern erforderlich, um einen Vorschlag anzunehmen.
+Pattsituationen:
+
+Wird ein Vorschlag nur von einem Haus angenommen, gilt er als abgelehnt.
+Der Vorschlag kann überarbeitet und erneut eingereicht werden.
+Sicherheit und Transparenz
+Verifizierung: Stimmen werden durch On-Chain-Identitäten und Aktivitätsnachweise gesichert.
+Sybil-Angriffe: KI-gestützte Überwachung verhindert Manipulationen.
+Transparenz: Alle Entscheidungen und Abstimmungen werden öffentlich dokumentiert.
+Performance-Reviews und Abwahl von Teammitgliedern
+Reviews: Quartalsweise Bewertung der Teamleistung basierend auf Zielerreichung, Budgettreue und Community-Zufriedenheit.
+Abwahl: Eine Abwahl von Teammitgliedern ist möglich, wenn 10 % der Spieler und 10 % der $HMON-Inhaber einen Antrag unterstützen. Mehrheitliche Zustimmung beider Häuser erforderlich.
+Häufigkeit von Abstimmungen und Reviews
+Regelmäßige Abstimmungen: Monatlich über Vorschläge und Updates.
+Reviews: Quartalsweise Überprüfung von Teammitgliedern und Projekten.
+Wahlen: Jährliche Wahlen für Teammitglieder und Moderatoren.
+Weiterentwicklung des Governance-Systems
+Anpassungen: Spieler können Änderungen am Governance-Modell selbst vorschlagen.
+Pilotprojekte: Neue Mechanismen werden testweise eingeführt, bevor sie vollständig implementiert werden.
+Integration mit anderen Systemen
+Das Governance-System ist eng mit allen Aspekten von Huntmon verknüpft:
+
+Technologie: Änderungen an der Blockchain erfordern Community-Zustimmung.
+Spielmechaniken: Neue Features oder Balance-Anpassungen müssen vom Unterhaus genehmigt werden.
+Budget: Finanzielle Entscheidungen werden durch das Oberhaus abgesegnet.
+Vorteile für die Community
+Mitbestimmung: Spieler und Token-Inhaber gestalten die Entwicklung aktiv mit.
+Transparenz: Offene Kommunikation schafft Vertrauen.
+Flexibilität: Das System passt sich den Bedürfnissen der Community an.
+Nachhaltigkeit: Demokratische Kontrolle sichert den langfristigen Erfolg.
+Fazit:
+Das Governance-System von Huntmon ermöglicht eine demokratische Mitbestimmung der Spieler und Token-Inhaber. Es garantiert Transparenz und Nachhaltigkeit, während es die Entwicklung des Spiels aktiv durch die Community steuern lässt. Diese Struktur schafft Vertrauen und bindet die Spieler langfristig an das Projekt.
