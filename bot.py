@@ -41,12 +41,12 @@ def read_chapter_content(chapter_number):
         return None
 
 # GPT-gestütztes Tweet-Generieren
-def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBWBu"):
+def generate_tweet(whitepaper_content):
     prompt = f"""
     Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
     {whitepaper_content}
-    
-    Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte neugierig machen, Leser dazu einladen, dem Discord-Server beizutreten, und relevante Hashtags wie #Huntmon, #Blockchain, #Gaming enthalten.
+
+    Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte neugierig machen, Leser ansprechen und relevante, hypende Hashtags wie #Huntmon, #BlockchainGaming, #NFTGaming, #CryptoGaming, #PlayToEarn, #ARGaming enthalten.
     """
     try:
         response = openai.ChatCompletion.create(
@@ -59,16 +59,13 @@ def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBW
             temperature=0.7,
         )
         tweet = response["choices"][0]["message"]["content"].strip()
-        # Kombiniere den Tweet mit dem Discord-Link
-        tweet_with_link = f"{tweet}\n\n🌟 Join our Discord: {discord_link}"
         # Kürze, falls der Tweet zu lang ist
-        if len(tweet_with_link) > 280:
-            tweet_with_link = tweet_with_link[:277] + "..."  # Kürzen auf 280 Zeichen
-        return tweet_with_link
+        if len(tweet) > 280:
+            tweet = tweet[:277] + "..."  # Kürzen auf 280 Zeichen
+        return tweet
     except Exception as e:
         print("Fehler bei der Generierung des Tweets mit GPT:", e)
-        return "Explore the world of Huntmon! 🌟 Join our Discord: https://discord.gg/hVjpvDBWBu"
-
+        return "Explore the world of Huntmon! 🌟 Dive into #Huntmon #BlockchainGaming #NFTGaming #PlayToEarn."
 
 # Hauptfunktion: Tweet posten
 def post_tweet():
