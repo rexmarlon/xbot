@@ -1,0 +1,26 @@
+Kapitel 18: FAQ (Häufig gestellte Fragen)
+Kapitel 18 beantwortet häufige Fragen rund um Huntmon, um Spielern, Investoren und Partnern Klarheit über die Spielmechaniken, Verdienstmöglichkeiten und die langfristige Vision des Projekts zu geben.
+
+1. Kann ich ohne Startinvestition mit Huntmon beginnen?
+Ja: Spieler können ohne finanzielle Investition starten. Tokens können durch tägliche Bewegung, Aufgaben und das Ansehen von Werbung verdient werden.
+2. Wie verdiene ich Geld mit Huntmon?
+Spieler verdienen durch:
+Bewegung (Walk-to-Earn).
+Handel mit NFTs wie Huntmons, Land oder Items.
+Teilnahme an Kämpfen, Turnieren und Quests.
+Externe Einnahmen aus Werbung und Sponsoren stabilisieren das System und steigern die Token-Werte.
+3. Wie wird die Sicherheit meiner Investitionen gewährleistet?
+Regelmäßige Sicherheitsaudits und ein robustes Anti-Cheat-System schützen Investitionen.
+Smart Contracts und Token-Mechaniken werden von renommierten Firmen wie CertiK überprüft.
+Bugs werden durch ein Bug-Bounty-Programm frühzeitig erkannt und behoben.
+4. Wann kann die Community Entscheidungen treffen?
+Nach der Einführung des Governance-Systems können Spieler aktiv Vorschläge einreichen und über Features, Events und Teamentscheidungen abstimmen.
+Bis dahin wird die Community durch regelmäßige Umfragen eingebunden.
+5. Was passiert, wenn das Finanzierungsziel nicht erreicht wird?
+Flexible Umsetzung: Falls das Ziel nicht erreicht wird, werden Kernfunktionen wie Walk-to-Earn priorisiert.
+Erweiterte Features wie AR und PvP werden in späteren Phasen entwickelt.
+6. Wie tragen externe Einnahmequellen zur Nachhaltigkeit bei?
+Einnahmen aus Werbung und Sponsoren werden genutzt, um Tokens zurückzukaufen und zu „burnen“.
+Dies reduziert die Inflation und erhöht die Nachfrage nach Tokens.
+Fazit:
+Kapitel 18 beantwortet die zentralen Fragen zu Huntmon und verdeutlicht, wie Spieler, Investoren und Partner von den Mechaniken und Strategien des Projekts profitieren können. Transparenz und Flexibilität stehen im Fokus, um Vertrauen in das System zu schaffen.
