@@ -1,6 +1,7 @@
 import tweepy
 import openai
 import os
+import textwrap
 
 # OpenAI API-Key laden
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -38,7 +39,6 @@ def save_current_chapter(chapter_number):
     except IOError as e:
         print(f"Fehler beim Schreiben in {CHAPTER_FILE}: {e}")
 
-
 # Kapitelinhalt aus einer Datei laden
 def read_chapter_content(chapter_number):
     chapter_filename = os.path.join(CHAPTER_DIRECTORY, f"Kapitel-{chapter_number}.txt")
@@ -72,9 +72,8 @@ def generate_tweet(whitepaper_content):
         if tweet.startswith('"') and tweet.endswith('"'):
             tweet = tweet[1:-1]
         print(f"Generierter Tweet (vor Kürzung): {tweet} (Länge: {len(tweet)})")
-        # Kürze, falls der Tweet zu lang ist
-        if len(tweet) > 280:
-            tweet = tweet[:277] + "..."  # Kürzen auf 280 Zeichen
+        # Kürze den Tweet auf maximal 280 Zeichen
+        tweet = textwrap.shorten(tweet, width=280, placeholder="...")
         print(f"Tweet nach Kürzung: {tweet} (Länge: {len(tweet)})")
         return tweet
     except Exception as e:
@@ -102,10 +101,8 @@ def post_tweet():
         print("Tweet erfolgreich gepostet:", response.data)
         save_current_chapter(chapter_number + 1)
     except tweepy.errors.Forbidden as e:
-        if "duplicate" in str(e).lower():
-            print("Tweet wurde nicht gepostet, da er bereits existiert.")
-        else:
-            print("Ein Fehler ist aufgetreten beim Posten des Tweets:", e)
+        print("Ein Fehler ist aufgetreten beim Posten des Tweets:", e)
+        print("Fehlerdetails:", e.response.text)
     except Exception as e:
         print("Ein unerwarteter Fehler ist aufgetreten:", e)
 
