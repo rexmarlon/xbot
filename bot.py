@@ -21,14 +21,18 @@ CHAPTER_DIRECTORY = "."
 
 # Aktuelles Kapitel laden oder mit Kapitel 1 starten
 def load_current_chapter():
+    print(f"Lade Kapitelnummer aus {CHAPTER_FILE}")
     if os.path.exists(CHAPTER_FILE):
         with open(CHAPTER_FILE, "r") as file:
-            return int(file.read().strip())
+            content = file.read().strip()
+            print(f"Inhalt der geladenen Datei: {content}")
+            return int(content)
+    print("Datei nicht gefunden. Starte mit Kapitel 1.")
     return 1
-
+    
 # Aktuelles Kapitel speichern
 def save_current_chapter(chapter_number):
-    print(f"Speichere Kapitelnummer: {chapter_number} in {CHAPTER_FILE}")  # Debug-Ausgabe
+    print(f"Speichere Kapitelnummer: {chapter_number} in {CHAPTER_FILE}")
     try:
         with open(CHAPTER_FILE, "w") as file:
             file.write(str(chapter_number))
