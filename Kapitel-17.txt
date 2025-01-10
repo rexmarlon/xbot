@@ -1,0 +1,28 @@
+Kapitel 17: Glossar
+Kapitel 17 definiert die wichtigsten Begriffe und Technologien, die in Huntmon verwendet werden. Das Glossar dient dazu, technische und spielbezogene Konzepte verständlich zu machen.
+
+1. AR (Augmented Reality):
+Eine Technologie, die virtuelle Elemente in die reale Welt integriert. Bei Huntmon ermöglicht AR den Spielern, Huntmons in ihrer Umgebung zu sehen und mit ihnen zu interagieren.
+
+2. DAO (Decentralized Autonomous Organization):
+Eine dezentral organisierte Verwaltung, die mithilfe von Blockchain-Technologie funktioniert. Entscheidungen werden demokratisch durch die Community getroffen.
+
+3. NFT (Non-Fungible Token):
+Ein einzigartiger digitaler Vermögenswert, der auf der Blockchain gespeichert ist. In Huntmon werden NFTs verwendet, um Huntmons, Landbesitz und Items abzubilden.
+
+4. Layer-2-Lösungen:
+Technologische Erweiterungen, die auf der Haupt-Blockchain aufbauen, um Transaktionen schneller und kostengünstiger zu machen. Huntmon nutzt beispielsweise zkRollups.
+
+5. ERC-Standards:
+Technische Standards für Ethereum-basierte Tokens:
+
+ERC-20: Für fungible Tokens wie $MNERG und $HMON.
+ERC-721: Für einzigartige NFTs wie Huntmons.
+ERC-1155: Für hybride Token, die fungible und nicht-fungible Eigenschaften kombinieren.
+6. $MNERG:
+Der Utility-Token von Huntmon, der für In-Game-Transaktionen wie Käufe, Fusionen und Training genutzt wird.
+
+7. $HMON:
+Der Governance-Token von Huntmon, der den Spielern ermöglicht, über Vorschläge abzustimmen und Zugriff auf exklusive Inhalte zu erhalten.
+
+Fazit: Das Glossar bietet eine klare Übersicht über die zentralen Begriffe, die für das Verständnis von Huntmon und dessen technologischer Infrastruktur entscheidend sind. Es dient als Nachschlagewerk für Spieler, Investoren und Partner.
