@@ -1,0 +1,41 @@
+Kapitel 3: Spielmechaniken
+Kapitel 3 beschreibt die zentralen Mechaniken von Huntmon und wie diese das Gameplay und die Spielererfahrung gestalten. Es geht um Monster, deren Eigenschaften, Kämpfe und die Ziele der Spieler.
+
+Elementtypen und ihre Mechaniken
+Huntmons haben verschiedene Elementtypen, die ihre Stärken, Schwächen und Fähigkeiten bestimmen. Diese beeinflussen sowohl Kämpfe als auch Strategien der Spieler. Beispiele für Elementtypen:
+
+Feuer: Stark gegen Pflanze und Eis, schwach gegen Wasser und Erde. Besondere Fähigkeiten: Verbrennungseffekte.
+Wasser: Stark gegen Feuer und Erde, schwach gegen Elektro und Pflanze. Besondere Fähigkeiten: Heilung und Flächenschaden.
+Elektro: Stark gegen Wasser und Wind, schwach gegen Erde und Licht. Besondere Fähigkeiten: Betäubung und elektrische Barrieren.
+Die Effektivität der Elementtypen wird durch eine Element-Matrix definiert, die ein strategisches Verständnis für Kämpfe erfordert.
+
+Ziele der Monsterjäger
+Spieler können unterschiedliche Ziele verfolgen:
+
+Frieden bewahren: Böse Monsterjäger bekämpfen und friedliche Huntmons schützen.
+Die besten Huntmons sammeln: Seltene, starke und wertvolle Monster erwerben.
+Rätsel der Portale lösen: Geheimnisse hinter den mysteriösen Portalen aufdecken.
+Böse Jäger bekämpfen: Dunkle Jäger besiegen, um das Gleichgewicht der Welt zu bewahren.
+Interaktionen mit Huntmons
+Wilde Huntmons: Diese können gefangen, besiegt oder als Verbündete gewonnen werden.
+Aggressive Huntmons: Erfordern strategisches Denken und Ressourcenmanagement.
+Bindungssystem: Spieler bauen durch Pflege und Interaktion eine Beziehung zu ihren Huntmons auf, was deren Fähigkeiten verbessert.
+Konflikte und Interaktionen zwischen Spielern
+Spieler können in unterschiedlichen Rollen interagieren:
+
+Gute Monsterjäger: Fördern Frieden und Zusammenarbeit, z. B. durch gemeinsame Missionen.
+Böse Monsterjäger: Stellen eine Bedrohung dar, indem sie Chaos stiften oder andere Spieler herausfordern.
+Fraktionen: Spieler können sich Gruppen anschließen, um Ressourcen zu teilen und strategisch zusammenzuarbeiten.
+Events und Herausforderungen
+Huntmon bietet dynamische Ereignisse, die das Gameplay bereichern:
+
+Portalevents: Spieler arbeiten zusammen, um gefährliche Portale zu schließen.
+Huntmon-Festival: Ein globales Event, bei dem seltene Huntmons und Belohnungen zu gewinnen sind.
+Fraktionskriege: PvP- und PvE-Wettkämpfe zwischen guten und bösen Jägern.
+Belohnungssystem
+Spieler erhalten Belohnungen durch Kämpfe, Missionen und Interaktionen:
+
+Tokens und Items: Werden für erfolgreiches Gameplay vergeben.
+Ranglisten und Titel: Spieler können Titel wie „Hüter der Balance“ oder „Champion der Portale“ erreichen.
+Exklusive Inhalte: Zugang zu seltenen Huntmons, kosmetischen Anpassungen und wertvollen Items.
+Kapitel 3 zeigt, dass Huntmon ein tiefgründiges und strategisches Gameplay bietet, das auf Interaktionen zwischen Spielern, Huntmons und der Spielwelt aufbaut. Die Vielseitigkeit der Mechaniken sorgt für ein fesselndes Erlebnis für eine breite Zielgruppe.
