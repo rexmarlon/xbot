@@ -31,11 +31,15 @@ def load_current_chapter():
     return 1
     
 # Aktuelles Kapitel speichern
+import fcntl
+
 def save_current_chapter(chapter_number):
     print(f"Speichere Kapitelnummer: {chapter_number} in {CHAPTER_FILE}")
     try:
         with open(CHAPTER_FILE, "w") as file:
+            fcntl.flock(file, fcntl.LOCK_EX)  # Sperre die Datei exklusiv
             file.write(str(chapter_number))
+            fcntl.flock(file, fcntl.LOCK_UN)  # Aufheben der Sperre
         # Überprüfen, ob der Inhalt korrekt geschrieben wurde
         with open(CHAPTER_FILE, "r") as file:
             content = file.read().strip()
