@@ -1,4 +1,4 @@
-Einführung
+Kapitel 1. Einführung
 Huntmon ist ein innovatives, dezentrales Mobile Game, das reale Bewegung mit virtuellen Welten verbindet. Das Spiel kombiniert Technologien wie Augmented Reality (AR), Blockchain und eine Walk-to-Earn-Mechanik, um Spieler aktiv zu belohnen.
 
 Kernkonzept:
