@@ -27,8 +27,10 @@ def load_current_chapter():
 
 # Aktuelles Kapitel speichern
 def save_current_chapter(chapter_number):
+    print(f"Speichere Kapitelnummer: {chapter_number} in {CHAPTER_FILE}")  # Debug-Ausgabe
     with open(CHAPTER_FILE, "w") as file:
         file.write(str(chapter_number))
+
 
 # Kapitelinhalt aus einer Datei laden
 def read_chapter_content(chapter_number):
@@ -46,7 +48,7 @@ def generate_tweet(whitepaper_content):
     Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
     {whitepaper_content}
 
-    Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte neugierig machen, Leser ansprechen. WICHTIG: Benutze relevante, zurzeit hypende und passende Hashtags wie zumb Beispiel #Huntmon, #BlockchainGaming, #NFTGaming, #CryptoGaming, #PlayToEarn, #ARGaming enthalten und suche geziel passende Nischen Hashtags zu den Themen über die du schreibst..
+    Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte informativ sein und neugierig machen, Leser ansprechen. WICHTIG: Benutze relevante, zurzeit hypende und passende Hashtags wie zumb Beispiel #Huntmon, #BlockchainGaming, #NFTGaming, #CryptoGaming, #PlayToEarn, #ARGaming enthalten und suche geziel passende momentane hypende Nischen Hashtags zu den Themen über die du schreibst..
     """
     try:
         response = openai.ChatCompletion.create(
