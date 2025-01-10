@@ -45,7 +45,7 @@ def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBW
     prompt = f"""
     Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
     {whitepaper_content}
-
+    
     Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte neugierig machen, Leser dazu einladen, dem Discord-Server beizutreten, und relevante Hashtags wie #Huntmon, #Blockchain, #Gaming enthalten.
     """
     try:
@@ -59,10 +59,16 @@ def generate_tweet(whitepaper_content, discord_link="https://discord.gg/hVjpvDBW
             temperature=0.7,
         )
         tweet = response["choices"][0]["message"]["content"].strip()
-        return f"{tweet}\n\n\ud83c\udf1f Join our Discord: {discord_link}"
+        # Kombiniere den Tweet mit dem Discord-Link
+        tweet_with_link = f"{tweet}\n\n🌟 Join our Discord: {discord_link}"
+        # Kürze, falls der Tweet zu lang ist
+        if len(tweet_with_link) > 280:
+            tweet_with_link = tweet_with_link[:277] + "..."  # Kürzen auf 280 Zeichen
+        return tweet_with_link
     except Exception as e:
         print("Fehler bei der Generierung des Tweets mit GPT:", e)
-        return "Explore the world of Huntmon! \ud83c\udf1f Join our Discord: https://discord.gg/hVjpvDBWBu"
+        return "Explore the world of Huntmon! 🌟 Join our Discord: https://discord.gg/hVjpvDBWBu"
+
 
 # Hauptfunktion: Tweet posten
 def post_tweet():
