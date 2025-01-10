@@ -1,4 +1,4 @@
 *.pyc
 __pycache__/
 .env
-echo "current_chapter.txt" >> .gitignore
+current_chapter.txt
