@@ -1,0 +1,60 @@
+Kapitel 7: Monetarisierung
+Kapitel 7 erläutert die Monetarisierungsstrategien von Huntmon, die es Spielern ermöglichen, durch Bewegung, Kämpfe und Handel Tokens zu verdienen, während externe Einnahmequellen das Ökosystem stabilisieren.
+
+Walk-to-Earn
+Spieler verdienen $MNERG, indem sie sich bewegen. Belohnungen hängen von der Art der Aktivität ab:
+
+Schritte: 1 $MNERG pro 1.000 Schritte.
+Joggen: 1,5 $MNERG pro 1.000 Schritte.
+Laufen: 2 $MNERG pro 1.000 Schritte.
+Tägliches Limit: Bis zu 100 $MNERG pro Tag. Dieses Limit kann erhöht werden durch:
+Besitz spezieller NFTs.
+Staking von $HMON-Tokens.
+Werbung (z. B. kurze Videos ansehen für zusätzliche Boni).
+Play-to-Earn
+Spieler verdienen Tokens durch Gameplay:
+
+Kämpfe:
+PvP: Spieler treten gegeneinander an und gewinnen Belohnungen.
+PvE: Spieler besiegen Boss-Huntmons oder schließen gefährliche Portale.
+Missionen und Quests: Tägliche oder wöchentliche Aufgaben bieten steigende Belohnungen.
+Turniere: Wettbewerbe mit exklusiven Preisen, wie $MNERG, seltene Huntmons oder Items.
+Handel und Fusion
+Huntmon-Handel:
+Spieler können Monster auf dem Marktplatz handeln. Seltene oder trainierte Huntmons sind besonders wertvoll.
+Fusion:
+Zwei kompatible Huntmons können zu einem mächtigeren Monster fusioniert werden.
+Kosten: $MNERG und $HMON, abhängig von der Seltenheit der Huntmons.
+Strategie: Spieler entscheiden, ob sie ein Huntmon verkaufen, trainieren oder fusionieren, um langfristig erfolgreich zu sein.
+Staking
+Spieler können $MNERG und $HMON staken, um passives Einkommen zu generieren.
+Vorteile:
+Höhere tägliche Limits.
+Zugang zu exklusiven Inhalten und Events.
+Mitspracherecht in der Community-Governance.
+Kreative Beiträge und Werbung
+Kreative Beiträge: Spieler können Skins, Items oder Quests entwerfen, die von der Community bewertet und ins Spiel integriert werden. Erfolgreiche Beiträge werden mit Tokens belohnt.
+Werbung: Spieler können Tokens oder kleine Boni verdienen, indem sie Werbevideos ansehen, ohne eigenes Kapital investieren zu müssen.
+Zugang ohne Startinvestition
+Huntmon bietet Spielern die Möglichkeit, kostenlos zu starten:
+
+Startpaket: Spieler erhalten grundlegende Items und ein Huntmon.
+Weiterentwicklung: Spieler können durch Bewegung, Quests und Kämpfe Tokens und Ressourcen verdienen.
+Nachhaltige Monetarisierung
+NFT-Verkäufe:
+Limitierte Items und Huntmons werden bei besonderen Events angeboten.
+Kosmetische Anpassungen für Huntmons oder Avatare sind erhältlich.
+Transaktionsgebühren: Ein kleiner Prozentsatz jeder Transaktion fließt ins Projekt, z. B. für:
+Entwicklung und Betrieb des Spiels.
+Unterstützung des Umweltfonds.
+Ausschüttung an Huntmon-Shareholder-NFT-Inhaber.
+Premium-Inhalte: Abonnements bieten Vorteile wie:
+Höhere tägliche $MNERG-Limits.
+Zugang zu exklusiven Events.
+Rabatte auf Marktplatz-Transaktionen.
+Externe Einnahmequellen und Nachhaltigkeit
+Werbepartner und Sponsoren:
+Marken können Items oder Avatare im Spiel integrieren.
+Einnahmen fließen in Token-Rückkäufe und Burning-Mechanismen.
+Umweltfonds: Ein Teil der Transaktionsgebühren wird für Umweltprojekte verwendet.
+Kapitel 7 zeigt, wie Huntmon durch Walk-to-Earn, Play-to-Earn und externe Einnahmen ein faires und nachhaltiges Monetarisierungssystem bietet. Spieler können ohne Startinvestition teilnehmen und durch strategisches Gameplay erfolgreich sein.
