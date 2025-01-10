@@ -28,8 +28,15 @@ def load_current_chapter():
 # Aktuelles Kapitel speichern
 def save_current_chapter(chapter_number):
     print(f"Speichere Kapitelnummer: {chapter_number} in {CHAPTER_FILE}")  # Debug-Ausgabe
-    with open(CHAPTER_FILE, "w") as file:
-        file.write(str(chapter_number))
+    try:
+        with open(CHAPTER_FILE, "w") as file:
+            file.write(str(chapter_number))
+        # Überprüfen, ob der Inhalt korrekt geschrieben wurde
+        with open(CHAPTER_FILE, "r") as file:
+            content = file.read().strip()
+        print(f"Inhalt der Datei nach dem Schreiben: {content}")
+    except IOError as e:
+        print(f"Fehler beim Schreiben in {CHAPTER_FILE}: {e}")
 
 
 # Kapitelinhalt aus einer Datei laden
@@ -61,6 +68,9 @@ def generate_tweet(whitepaper_content):
             temperature=0.7,
         )
         tweet = response["choices"][0]["message"]["content"].strip()
+        # Entferne umgebende Anführungszeichen, falls vorhanden
+        if tweet.startswith('"') and tweet.endswith('"'):
+            tweet = tweet[1:-1]
         # Kürze, falls der Tweet zu lang ist
         if len(tweet) > 280:
             tweet = tweet[:277] + "..."  # Kürzen auf 280 Zeichen
