@@ -2,20 +2,21 @@ name: Twitter Bot Scheduler
 
 on:
   schedule:
-    # Führe den Bot um 11:00 und 18:00 Uhr UTC aus
+    # Führe den Bot zu den angegebenen Zeiten aus
     - cron: "0 00 * * *"
     - cron: "0 02 * * *"
     - cron: "0 04 * * *"
     - cron: "0 06 * * *"
-    - cron: "0 09 * * *"
-    - cron: "0 11 * * *"
-    - cron: "0 13 * * *"
-    - cron: "0 15 * * *"
-    - cron: "0 17 * * *"
-    - cron: "0 19 * * *"
-    - cron: "0 21 * * *"
-    - cron: "0 23 * * *"
+    - cron: "0 08 * * *"
+    - cron: "0 10 * * *"
+    - cron: "0 12 * * *"
+    - cron: "0 14 * * *"
+    - cron: "0 16 * * *"
+    - cron: "0 18 * * *"
+    - cron: "0 20 * * *"
+    - cron: "0 22 * * *"
   workflow_dispatch:
+
 jobs:
   tweet:
     runs-on: ubuntu-latest
@@ -43,3 +44,11 @@ jobs:
         ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: python bot.py
+
+    - name: Kapitelnummer aktualisieren und committen
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add current_chapter.txt
+        git commit -m "Update current_chapter.txt" || echo "Nichts zu committen"
+        git push
