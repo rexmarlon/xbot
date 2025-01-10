@@ -1,0 +1,51 @@
+Kapitel 4: Tokenomics
+Kapitel 4 beschreibt die wirtschaftlichen Mechanismen und die Tokenstruktur von Huntmon, die das Spiel finanzieren und Spielern nachhaltige Verdienstmöglichkeiten bieten.
+
+Dual-Token-System
+Huntmon verwendet zwei Tokens mit unterschiedlichen Funktionen:
+
+$MNERG (Utility-Token):
+
+Gesamtvorrat: 10 Milliarden.
+Funktion: Wird für In-Game-Transaktionen genutzt, z. B. für den Kauf von Items, Training von Huntmons oder Monsterfusionen.
+Erwerb: Spieler verdienen $MNERG durch Bewegung (Walk-to-Earn), Kämpfe, Quests, Handel und Events.
+Verwendung: Kauf von Items, Nutzung von Einrichtungen, Teilnahme an Events.
+$HMON (Governance-Token):
+
+Gesamtvorrat: 1 Milliarde.
+Funktion: Ermöglicht Abstimmungen über die Entwicklung des Spiels und Zugriff auf exklusive Inhalte.
+Erwerb: Durch Staking von $MNERG, besondere Events oder Token-Sales.
+Verwendung: Teilnahme an Abstimmungen, Belohnungs-Boosts und exklusiven Inhalten.
+Verteilung der Tokens
+Tokens werden gezielt verteilt, um das Ökosystem nachhaltig zu gestalten:
+
+$MNERG:
+
+Spielerbelohnungen: 60 %
+Ökosystem-Fonds: 15 %
+Team: 10 %
+Private Investoren: 8 %
+Berater: 2 %
+Reserven: 5 %
+$HMON:
+
+Public Sale: 25 %
+Private Sale: 10 %
+Team: 15 %
+Marketing und Community: 15 %
+Ökosystem-Entwicklung: 20 %
+Staking-Belohnungen: 10 %
+Token-Sinks
+Huntmon implementiert Mechanismen, um Inflation zu vermeiden und den langfristigen Wert der Tokens zu sichern:
+
+Verbrauch von $MNERG: Für Käufe, Training, Fusionen und Eventteilnahmen.
+Burning-Mechanismen: Ein Teil der Tokens wird bei bestimmten Transaktionen (z. B. NFT-Verkäufen oder Events) verbrannt, um das Angebot zu reduzieren.
+Externe Einnahmen und Wertsteigerung
+Huntmon generiert externe Einnahmen, um die Token-Werte zu stabilisieren:
+
+Werbung und Sponsoren: Marken können Produkte im Spiel platzieren.
+Token-Rückkäufe und Burning: Einnahmen werden genutzt, um Tokens zurückzukaufen und zu verbrennen, was die Nachfrage erhöht.
+Einnahmenbeteiligung und Staking
+Staking: Spieler können $MNERG und $HMON staken und erhalten Belohnungen basierend auf der Netzwerkaktivität.
+Huntmon-Shareholder-NFTs: Besitzer dieser NFTs profitieren direkt von Transaktionsgebühren und wirtschaftlichen Aktivitäten im Spiel.
+Kapitel 4 zeigt, wie Huntmon eine nachhaltige, skalierbare und faire In-Game-Wirtschaft entwickelt, die auf moderner Blockchain-Technologie basiert. Die Mechanismen fördern langfristiges Engagement und belohnen aktive sowie strategische Spieler.
