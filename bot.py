@@ -55,7 +55,7 @@ def generate_tweet(whitepaper_content):
     Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
     {whitepaper_content}
 
-    Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte informativ sein und neugierig machen, Leser ansprechen. WICHTIG: Benutze relevante, zurzeit hypende und passende Hashtags wie zumb Beispiel #Huntmon, #BlockchainGaming, #NFTGaming, #CryptoGaming, #PlayToEarn, #ARGaming enthalten und suche geziel passende momentane hypende Nischen Hashtags zu den Themen über die du schreibst..
+    Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte informativ sein und neugierig machen, Leser ansprechen. WICHTIG: Benutze relevante, zurzeit hypende und passende Hashtags wie zumb Beispiel #Huntmon, #BlockchainGaming, #NFTGaming, #CryptoGaming, #PlayToEarn, #ARGaming enthalten und suche gezielt passende momentane hypende Nischen Hashtags zu den Themen über die du schreibst..
     """
     try:
         response = openai.ChatCompletion.create(
@@ -71,9 +71,11 @@ def generate_tweet(whitepaper_content):
         # Entferne umgebende Anführungszeichen, falls vorhanden
         if tweet.startswith('"') and tweet.endswith('"'):
             tweet = tweet[1:-1]
+        print(f"Generierter Tweet (vor Kürzung): {tweet} (Länge: {len(tweet)})")
         # Kürze, falls der Tweet zu lang ist
         if len(tweet) > 280:
             tweet = tweet[:277] + "..."  # Kürzen auf 280 Zeichen
+        print(f"Tweet nach Kürzung: {tweet} (Länge: {len(tweet)})")
         return tweet
     except Exception as e:
         print("Fehler bei der Generierung des Tweets mit GPT:", e)
