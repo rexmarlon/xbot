@@ -60,7 +60,7 @@ def post_thread(whitepaper_content):
     Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
     {whitepaper_content}
 
-    Schreibe einen längeren, interessanten Text, der auf mehrere Tweets aufgeteilt werden kann. Jeder Tweet sollte:
+    Schreibe einen längeren, interessanten Text auf englisch, der auf mehrere Tweets aufgeteilt werden kann. Jeder Tweet sollte:
     - Informativ sein.
     - Leser neugierig machen.
     - Abwechslungsreiche Formulierungen verwenden.
