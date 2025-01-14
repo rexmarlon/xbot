@@ -127,15 +127,16 @@ def post_thread(whitepaper_content):
 
                     print(f"Tweet {i+1} posted:", response.data)
                     previous_tweet_id = response.data.get("id")
-                    time.sleep(5)  # Add a delay between tweets to avoid rate limits
+                    time.sleep(15)  # Increase delay between tweets to avoid rate limits
                     break
                 except tweepy.errors.TooManyRequests:
-                    print("Rate limit reached.")
+                    print("Rate limit reached. Sleeping for 15 minutes.")
+                    time.sleep(900)  # Sleep for 15 minutes
                 except Exception as e:
                     print(f"Error posting tweet {i+1}: {e}")
                     if attempt < 2:
                         print("Retrying...")
-                        time.sleep(2)
+                        time.sleep(120)  # Wait 2 minutes before retrying
                     else:
                         print("Aborting after 3 attempts.")
     except Exception as e:
@@ -171,7 +172,8 @@ def post_tweet():
             print("Tweet successfully posted:", response.data)
             save_current_chapter(chapter_number + 1)
         except tweepy.errors.TooManyRequests:
-            print("Rate limit reached.")
+            print("Rate limit reached. Sleeping for 15 minutes.")
+            time.sleep(900)  # Sleep for 15 minutes
         except tweepy.errors.Forbidden as e:
             print("Error posting tweet:", e)
             print("Details:", e.response.text)
