@@ -126,7 +126,10 @@ def post_thread(whitepaper_content):
                     print(f"Tweet {i+1} posted:", response.data)
                     previous_tweet_id = response.data.get("id")
                     break
-                except tweepy.errors.Forbidden as e:
+                except tweepy.errors.TooManyRequests:
+                    print("Rate limit reached. Sleeping for 15 minutes.")
+                    time.sleep(900)  # Sleep for 15 minutes
+                except Exception as e:
                     print(f"Error posting tweet {i+1}: {e}")
                     if attempt < 2:
                         print("Retrying...")
@@ -165,6 +168,9 @@ def post_tweet():
             response = client.create_tweet(text=tweet_with_image)
             print("Tweet successfully posted:", response.data)
             save_current_chapter(chapter_number + 1)
+        except tweepy.errors.TooManyRequests:
+            print("Rate limit reached. Sleeping for 15 minutes.")
+            time.sleep(900)  # Sleep for 15 minutes
         except tweepy.errors.Forbidden as e:
             print("Error posting tweet:", e)
             print("Details:", e.response.text)
