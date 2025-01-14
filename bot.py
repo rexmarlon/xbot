@@ -3,6 +3,7 @@ import openai
 import os
 import textwrap
 import time
+import random
 
 # OpenAI API-Key laden
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -19,6 +20,7 @@ client = tweepy.Client(
 # Pfad zur Datei, in der das aktuelle Kapitel gespeichert wird
 CHAPTER_FILE = "current_chapter.txt"
 CHAPTER_DIRECTORY = "."
+IMAGES_DIRECTORY = "images"
 
 # Aktuelles Kapitel laden oder mit Kapitel 1 starten
 def load_current_chapter():
@@ -53,6 +55,30 @@ def read_chapter_content(chapter_number):
         print(f"Kapitel {chapter_number} wurde nicht gefunden.")
         return None
 
+# Zufälliges Bild aus dem Verzeichnis auswählen
+def get_random_image():
+    try:
+        images = [f for f in os.listdir(IMAGES_DIRECTORY) if f.endswith(('.png', '.jpg', '.jpeg'))]
+        if not images:
+            print("Keine Bilder im Verzeichnis gefunden.")
+            return None
+        random_image = random.choice(images)
+        print(f"Zufällig ausgewähltes Bild: {random_image}")
+        return os.path.join(IMAGES_DIRECTORY, random_image)
+    except Exception as e:
+        print(f"Fehler beim Auswählen eines Bildes: {e}")
+        return None
+
+# Bild hochladen und ID zurückgeben
+def upload_image(file_path):
+    try:
+        media = client.media_upload(filename=file_path)
+        print(f"Bild hochgeladen: {media.media_id}")
+        return media.media_id
+    except Exception as e:
+        print(f"Fehler beim Hochladen des Bildes: {e}")
+        return None
+
 # GPT-gestütztes Thread-Generieren und Posten
 def post_thread(whitepaper_content):
     # Generiere den langen Text basierend auf dem Whitepaper
@@ -60,7 +86,7 @@ def post_thread(whitepaper_content):
     Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
     {whitepaper_content}
 
-    Schreibe einen längeren, interessanten Text auf englisch, der auf mehrere Tweets aufgeteilt werden kann. Jeder Tweet sollte:
+    Schreibe einen längeren, interessanten Text, der auf mehrere Tweets aufgeteilt werden kann. Jeder Tweet sollte:
     - Informativ sein.
     - Leser neugierig machen.
     - Abwechslungsreiche Formulierungen verwenden.
@@ -95,10 +121,14 @@ def post_thread(whitepaper_content):
 
             for attempt in range(3):  # Bis zu 3 Versuche pro Tweet
                 try:
+                    # Wähle ein zufälliges Bild und lade es hoch
+                    image_path = get_random_image()
+                    media_id = upload_image(image_path) if image_path else None
+
                     if previous_tweet_id:
-                        response = client.create_tweet(text=tweet, in_reply_to_tweet_id=previous_tweet_id)
+                        response = client.create_tweet(text=tweet, in_reply_to_tweet_id=previous_tweet_id, media_ids=[media_id] if media_id else None)
                     else:
-                        response = client.create_tweet(text=tweet)
+                        response = client.create_tweet(text=tweet, media_ids=[media_id] if media_id else None)
                     print(f"Tweet {i+1} gepostet:", response.data)
                     previous_tweet_id = response.data.get("id")
                     break
@@ -134,7 +164,11 @@ def post_tweet():
     else:
         tweet = generate_tweet(whitepaper_content)
         try:
-            response = client.create_tweet(text=tweet)
+            # Wähle ein zufälliges Bild und lade es hoch
+            image_path = get_random_image()
+            media_id = upload_image(image_path) if image_path else None
+
+            response = client.create_tweet(text=tweet, media_ids=[media_id] if media_id else None)
             print("Tweet erfolgreich gepostet:", response.data)
             save_current_chapter(chapter_number + 1)
         except tweepy.errors.Forbidden as e:
