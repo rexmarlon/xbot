@@ -111,13 +111,15 @@ def post_thread(whitepaper_content):
         if current_tweet:
             tweets.append(current_tweet)
 
+        # Wähle ein Bild für den ersten Tweet aus
+        image_url = get_random_image_url()
+
         # Poste die Tweets als Thread
         previous_tweet_id = None
         for i, tweet in enumerate(tweets):
             for attempt in range(3):  # Retry logic
                 try:
                     if i == 0:  # Post image link only with the first tweet
-                        image_url = get_random_image_url()
                         tweet_with_image = f"{tweet}\n\n{image_url}" if image_url else tweet
                         response = client.create_tweet(text=f"{tweet_with_image} ({i+1}/{len(tweets)})")
                     else:
@@ -129,6 +131,7 @@ def post_thread(whitepaper_content):
                     break
                 except tweepy.errors.TooManyRequests:
                     print("Rate limit reached.")
+                    time.sleep(900)  # Sleep for 15 minutes
                 except Exception as e:
                     print(f"Error posting tweet {i+1}: {e}")
                     if attempt < 2:
