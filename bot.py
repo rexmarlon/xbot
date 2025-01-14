@@ -83,16 +83,16 @@ def upload_image(file_path):
 def post_thread(whitepaper_content):
     # Generiere den langen Text basierend auf dem Whitepaper
     prompt = f"""
-    Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
+    You are a creative social media manager for Huntmon. Based on the following content from the whitepaper:
     {whitepaper_content}
 
-    Schreibe einen längeren, interessanten Text, der auf mehrere Tweets aufgeteilt werden kann. Jeder Tweet sollte:
-    - Informativ sein.
-    - Leser neugierig machen.
-    - Abwechslungsreiche Formulierungen verwenden.
-    - Relevante Hashtags wie #Huntmon, #Matic, #ETH, #P2E, #ARGaming enthalten oder andere, die zum Inhalt des Textes gerade passen, aktuell hype sind, viele Nutzer anziehen oder in Nischen viel Aufmerksamkeit erhalten.
+    Write a longer, engaging text that can be split into multiple tweets. Each tweet should:
+    - Be informative.
+    - Spark curiosity among readers.
+    - Use varied and engaging language.
+    - Include relevant hashtags like #Huntmon, #Matic, #ETH, #P2E, #ARGaming, or others that are currently viral, attract attention, or are niche-specific.
 
-    Wichtig: Stelle sicher, dass jeder Abschnitt weniger als 280 Zeichen lang ist und als Teil eines Threads logisch fortgesetzt werden kann.
+    Make sure each segment is less than 280 characters and forms a logical part of the thread.
     """
     try:
         response = openai.ChatCompletion.create(
@@ -101,27 +101,37 @@ def post_thread(whitepaper_content):
                 {"role": "system", "content": "You are a creative social media assistant."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=500,
+            max_tokens=1000,
             temperature=0.7,
         )
         long_text = response["choices"][0]["message"]["content"].strip()
-        print(f"Generierter langer Text: {long_text}")
+        print(f"Generated long text: {long_text}")
 
-        # Splitte den langen Text in Abschnitte von maximal 275 Zeichen
-        tweets = textwrap.wrap(long_text, width=275, break_long_words=False, placeholder="...")
+        # Split the long text into logical sentences and ensure each tweet is <280 characters
+        tweets = []
+        current_tweet = ""
+        for sentence in long_text.split("."):
+            sentence = sentence.strip() + "."
+            if len(current_tweet) + len(sentence) <= 275:
+                current_tweet += " " + sentence
+            else:
+                tweets.append(current_tweet.strip())
+                current_tweet = sentence
+        if current_tweet:
+            tweets.append(current_tweet.strip())
 
         # Poste die Tweets als Thread
         previous_tweet_id = None
         posted_tweets = set()
         for i, tweet in enumerate(tweets):
             if tweet in posted_tweets:
-                print(f"Tweet {i+1} wurde übersprungen, da er doppelt ist: {tweet}")
+                print(f"Tweet {i+1} skipped as it is duplicate: {tweet}")
                 continue
             posted_tweets.add(tweet)
 
-            for attempt in range(3):  # Bis zu 3 Versuche pro Tweet
+            for attempt in range(3):  # Retry logic
                 try:
-                    # Wähle ein zufälliges Bild und lade es hoch
+                    # Select a random image and upload it
                     image_path = get_random_image()
                     media_id = upload_image(image_path) if image_path else None
 
@@ -129,18 +139,18 @@ def post_thread(whitepaper_content):
                         response = client.create_tweet(text=tweet, in_reply_to_tweet_id=previous_tweet_id, media_ids=[media_id] if media_id else None)
                     else:
                         response = client.create_tweet(text=tweet, media_ids=[media_id] if media_id else None)
-                    print(f"Tweet {i+1} gepostet:", response.data)
+                    print(f"Tweet {i+1} posted:", response.data)
                     previous_tweet_id = response.data.get("id")
                     break
                 except tweepy.errors.Forbidden as e:
-                    print(f"Fehler beim Posten von Tweet {i+1}: {e}")
+                    print(f"Error posting tweet {i+1}: {e}")
                     if attempt < 2:
-                        print("Versuche erneut...")
+                        print("Retrying...")
                         time.sleep(2)
                     else:
-                        print("Abbruch nach 3 Versuchen.")
+                        print("Aborting after 3 attempts.")
     except Exception as e:
-        print("Fehler beim Generieren oder Posten des Threads:", e)
+        print("Error generating or posting the thread:", e)
 
 # Hauptfunktion: Tweet posten
 def post_tweet():
@@ -148,34 +158,34 @@ def post_tweet():
     whitepaper_content = read_chapter_content(chapter_number)
 
     if not whitepaper_content:
-        print(f"Kapitel {chapter_number} nicht gefunden. Zurücksetzen auf Kapitel 1.")
+        print(f"Chapter {chapter_number} not found. Resetting to chapter 1.")
         chapter_number = 1
         save_current_chapter(chapter_number)
         whitepaper_content = read_chapter_content(chapter_number)
 
     if not whitepaper_content:
-        print("Kein Inhalt verfügbar. Der Prozess wird abgebrochen.")
+        print("No content available. Aborting process.")
         return
 
-    # Wähle zwischen Einzel-Tweet oder Thread
-    is_long_tweet = True  # Setze auf False, um normale Tweets zu posten
+    # Choose between single tweet or thread
+    is_long_tweet = True  # Set to False for single tweets
     if is_long_tweet:
         post_thread(whitepaper_content)
     else:
         tweet = generate_tweet(whitepaper_content)
         try:
-            # Wähle ein zufälliges Bild und lade es hoch
+            # Select a random image and upload it
             image_path = get_random_image()
             media_id = upload_image(image_path) if image_path else None
 
             response = client.create_tweet(text=tweet, media_ids=[media_id] if media_id else None)
-            print("Tweet erfolgreich gepostet:", response.data)
+            print("Tweet successfully posted:", response.data)
             save_current_chapter(chapter_number + 1)
         except tweepy.errors.Forbidden as e:
-            print("Ein Fehler ist aufgetreten beim Posten des Tweets:", e)
-            print("Fehlerdetails:", e.response.text)
+            print("Error posting tweet:", e)
+            print("Details:", e.response.text)
         except Exception as e:
-            print("Ein unerwarteter Fehler ist aufgetreten:", e)
+            print("An unexpected error occurred:", e)
 
 # Bot ausführen
 if __name__ == "__main__":
