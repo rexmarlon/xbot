@@ -135,10 +135,12 @@ def post_thread(whitepaper_content):
                     image_path = get_random_image()
                     media_id = upload_image(image_path) if image_path else None
 
+                    tweet_with_index = f"{tweet} ({i+1}/{len(tweets)})"
+
                     if previous_tweet_id:
-                        response = client.create_tweet(text=tweet, in_reply_to_tweet_id=previous_tweet_id, media_ids=[media_id] if media_id else None)
+                        response = client.create_tweet(text=tweet_with_index, in_reply_to_tweet_id=previous_tweet_id, media_ids=[media_id] if media_id else None)
                     else:
-                        response = client.create_tweet(text=tweet, media_ids=[media_id] if media_id else None)
+                        response = client.create_tweet(text=tweet_with_index, media_ids=[media_id] if media_id else None)
                     print(f"Tweet {i+1} posted:", response.data)
                     previous_tweet_id = response.data.get("id")
                     break
