@@ -71,8 +71,8 @@ def get_random_image_url():
         return None
 
 # GPT-gestütztes Thread-Generieren und Posten
-# Poste die Tweets als Thread
 def post_thread(whitepaper_content):
+    # Generiere den langen Text basierend auf dem Whitepaper
     prompt = f"""
     You are a creative social media manager for Huntmon. Based on the following content from the whitepaper:
     {whitepaper_content}
@@ -98,7 +98,7 @@ def post_thread(whitepaper_content):
         long_text = response["choices"][0]["message"]["content"].strip()
         print(f"Generated long text: {long_text}")
 
-        # Split the text into segments of <=275 characters
+        # Split the text into segments of <=275 characters, allowing sentence continuation
         tweets = []
         words = long_text.split()
         current_tweet = ""
@@ -111,39 +111,34 @@ def post_thread(whitepaper_content):
         if current_tweet:
             tweets.append(current_tweet)
 
-        # Poste die Tweets mit einer Verzögerung
+        # Poste die Tweets als Thread
         previous_tweet_id = None
         for i, tweet in enumerate(tweets):
-            for attempt in range(3):  # Retry-Logik
+            for attempt in range(3):  # Retry logic
                 try:
-                    if i == 0:  # Füge das Bild-URL im ersten Tweet hinzu
+                    if i == 0:  # Post image link only with the first tweet
                         image_url = get_random_image_url()
                         tweet_with_image = f"{tweet}\n\n{image_url}" if image_url else tweet
                         response = client.create_tweet(text=f"{tweet_with_image} ({i+1}/{len(tweets)})")
                     else:
-                        response = client.create_tweet(
-                            text=f"{tweet} ({i+1}/{len(tweets)})",
-                            in_reply_to_tweet_id=previous_tweet_id
-                        )
+                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", in_reply_to_tweet_id=previous_tweet_id)
 
-                    print(f"Tweet {i+1} gepostet: {response.data}")
+                    print(f"Tweet {i+1} posted:", response.data)
                     previous_tweet_id = response.data.get("id")
-                    
-                    # Füge eine Verzögerung zwischen den Tweets ein
-                    time.sleep(5)  # 5 Sekunden Pause
+                    time.sleep(5)  # Add a delay between tweets to avoid rate limits
                     break
                 except tweepy.errors.TooManyRequests:
-                    print("Rate limit erreicht. Warte 15 Minuten.")
-                    time.sleep(900)  # 15 Minuten warten
+                    print("Rate limit reached. Sleeping for 15 minutes.")
+                    time.sleep(900)  # Sleep for 15 minutes
                 except Exception as e:
-                    print(f"Fehler beim Posten von Tweet {i+1}: {e}")
+                    print(f"Error posting tweet {i+1}: {e}")
                     if attempt < 2:
-                        print("Erneuter Versuch...")
+                        print("Retrying...")
                         time.sleep(2)
                     else:
-                        print("Nach 3 Versuchen abgebrochen.")
+                        print("Aborting after 3 attempts.")
     except Exception as e:
-        print("Fehler beim Generieren oder Posten des Threads:", e)
+        print("Error generating or posting the thread:", e)
 
 # Hauptfunktion: Tweet posten
 def post_tweet():
