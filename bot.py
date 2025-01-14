@@ -117,7 +117,7 @@ def post_thread(whitepaper_content):
         # Poste die Tweets als Thread
         previous_tweet_id = None
         for i, tweet in enumerate(tweets):
-            for attempt in range(3):  # Retry logic
+            for attempt in range(10):  # Retry logic
                 try:
                     if i == 0:  # Post image link only with the first tweet
                         tweet_with_image = f"{tweet}\n\n{image_url}" if image_url else tweet
