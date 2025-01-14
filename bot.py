@@ -92,7 +92,7 @@ def post_thread(whitepaper_content):
     - Use varied and engaging language.
     - Include relevant hashtags like #Huntmon, #Matic, #ETH, #P2E, #ARGaming, or others that are currently viral, attract attention, or are niche-specific.
 
-    Make sure each segment is less than 280 characters and forms a logical part of the thread.
+    Ensure tweets flow logically, allowing sentences to continue in the next tweet if necessary, and keep each segment under 280 characters.
     """
     try:
         response = openai.ChatCompletion.create(
@@ -107,40 +107,31 @@ def post_thread(whitepaper_content):
         long_text = response["choices"][0]["message"]["content"].strip()
         print(f"Generated long text: {long_text}")
 
-        # Split the long text into logical sentences and ensure each tweet is <280 characters
+        # Split the text into segments of <=275 characters, allowing sentence continuation
         tweets = []
+        words = long_text.split()
         current_tweet = ""
-        for sentence in long_text.split("."):
-            sentence = sentence.strip() + "."
-            if len(current_tweet) + len(sentence) <= 275:
-                current_tweet += " " + sentence
+        for word in words:
+            if len(current_tweet) + len(word) + 1 <= 275:
+                current_tweet += (" " if current_tweet else "") + word
             else:
-                tweets.append(current_tweet.strip())
-                current_tweet = sentence
+                tweets.append(current_tweet)
+                current_tweet = word
         if current_tweet:
-            tweets.append(current_tweet.strip())
+            tweets.append(current_tweet)
 
         # Poste die Tweets als Thread
         previous_tweet_id = None
-        posted_tweets = set()
         for i, tweet in enumerate(tweets):
-            if tweet in posted_tweets:
-                print(f"Tweet {i+1} skipped as it is duplicate: {tweet}")
-                continue
-            posted_tweets.add(tweet)
-
             for attempt in range(3):  # Retry logic
                 try:
-                    # Select a random image and upload it
-                    image_path = get_random_image()
-                    media_id = upload_image(image_path) if image_path else None
-
-                    tweet_with_index = f"{tweet} ({i+1}/{len(tweets)})"
-
-                    if previous_tweet_id:
-                        response = client.create_tweet(text=tweet_with_index, in_reply_to_tweet_id=previous_tweet_id, media_ids=[media_id] if media_id else None)
+                    if i == 0:  # Post image only with the first tweet
+                        image_path = get_random_image()
+                        media_id = upload_image(image_path) if image_path else None
+                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", media_ids=[media_id] if media_id else None)
                     else:
-                        response = client.create_tweet(text=tweet_with_index, media_ids=[media_id] if media_id else None)
+                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", in_reply_to_tweet_id=previous_tweet_id)
+
                     print(f"Tweet {i+1} posted:", response.data)
                     previous_tweet_id = response.data.get("id")
                     break
