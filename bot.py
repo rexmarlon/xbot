@@ -2,6 +2,7 @@ import tweepy
 import openai
 import os
 import textwrap
+import time
 
 # OpenAI API-Key laden
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -80,19 +81,34 @@ def post_thread(whitepaper_content):
         long_text = response["choices"][0]["message"]["content"].strip()
         print(f"Generierter langer Text: {long_text}")
 
-        # Splitte den langen Text in Abschnitte von maximal 280 Zeichen
-        tweets = textwrap.wrap(long_text, width=280, break_long_words=False)
+        # Splitte den langen Text in Abschnitte von maximal 275 Zeichen
+        tweets = textwrap.wrap(long_text, width=275, break_long_words=False, placeholder="...")
 
         # Poste die Tweets als Thread
         previous_tweet_id = None
+        posted_tweets = set()
         for i, tweet in enumerate(tweets):
-            if previous_tweet_id:
-                response = client.create_tweet(text=tweet, in_reply_to_tweet_id=previous_tweet_id)
-            else:
-                response = client.create_tweet(text=tweet)
-            print(f"Tweet {i+1} gepostet:", response.data)
-            previous_tweet_id = response.data["id"]
+            if tweet in posted_tweets:
+                print(f"Tweet {i+1} wurde übersprungen, da er doppelt ist: {tweet}")
+                continue
+            posted_tweets.add(tweet)
 
+            for attempt in range(3):  # Bis zu 3 Versuche pro Tweet
+                try:
+                    if previous_tweet_id:
+                        response = client.create_tweet(text=tweet, in_reply_to_tweet_id=previous_tweet_id)
+                    else:
+                        response = client.create_tweet(text=tweet)
+                    print(f"Tweet {i+1} gepostet:", response.data)
+                    previous_tweet_id = response.data.get("id")
+                    break
+                except tweepy.errors.Forbidden as e:
+                    print(f"Fehler beim Posten von Tweet {i+1}: {e}")
+                    if attempt < 2:
+                        print("Versuche erneut...")
+                        time.sleep(2)
+                    else:
+                        print("Abbruch nach 3 Versuchen.")
     except Exception as e:
         print("Fehler beim Generieren oder Posten des Threads:", e)
 
