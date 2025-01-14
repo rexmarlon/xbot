@@ -169,8 +169,7 @@ def post_tweet():
             print("Tweet successfully posted:", response.data)
             save_current_chapter(chapter_number + 1)
         except tweepy.errors.TooManyRequests:
-            print("Rate limit reached. Sleeping for 15 minutes.")
-            time.sleep(900)  # Sleep for 15 minutes
+            print("Rate limit reached")
         except tweepy.errors.Forbidden as e:
             print("Error posting tweet:", e)
             print("Details:", e.response.text)
