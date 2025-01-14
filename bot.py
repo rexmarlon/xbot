@@ -29,18 +29,13 @@ def load_current_chapter():
             return int(content)
     print("Datei nicht gefunden. Starte mit Kapitel 1.")
     return 1
-    
-# Aktuelles Kapitel speichern
-import fcntl
 
+# Aktuelles Kapitel speichern
 def save_current_chapter(chapter_number):
     print(f"Speichere Kapitelnummer: {chapter_number} in {CHAPTER_FILE}")
     try:
         with open(CHAPTER_FILE, "w") as file:
-            fcntl.flock(file, fcntl.LOCK_EX)  # Sperre die Datei exklusiv
             file.write(str(chapter_number))
-            fcntl.flock(file, fcntl.LOCK_UN)  # Aufheben der Sperre
-        # Überprüfen, ob der Inhalt korrekt geschrieben wurde
         with open(CHAPTER_FILE, "r") as file:
             content = file.read().strip()
         print(f"Inhalt der Datei nach dem Schreiben: {content}")
@@ -57,21 +52,21 @@ def read_chapter_content(chapter_number):
         print(f"Kapitel {chapter_number} wurde nicht gefunden.")
         return None
 
-# GPT-gestütztes Tweet-Generieren
-def generate_tweet(whitepaper_content):
+# GPT-gestütztes Thread-Generieren und Posten
+def post_thread(whitepaper_content):
+    # Generiere den langen Text basierend auf dem Whitepaper
     prompt = f"""
-Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
-{whitepaper_content}
+    Du bist ein kreativer Social-Media-Manager für Huntmon. Basierend auf folgendem Inhalt aus dem Whitepaper:
+    {whitepaper_content}
 
-Schreibe einen kurzen, interessanten Tweet auf Englisch. Der Tweet sollte:
-- Informativ sein.
-- Leser neugierig machen.
-- Abwechslungsreiche Formulierungen verwenden.
-- Relevante Hashtags wie #Huntmon, #BlockchainGaming, #NFTGaming, #CryptoGaming, #PlayToEarn, #ARGaming enthalten oder andere die zum Inhalt des Textes gerade passen und hype sind und leute anzieht und interessante Nischen.
+    Schreibe einen längeren, interessanten Text, der auf mehrere Tweets aufgeteilt werden kann. Jeder Tweet sollte:
+    - Informativ sein.
+    - Leser neugierig machen.
+    - Abwechslungsreiche Formulierungen verwenden.
+    - Relevante Hashtags wie #Huntmon, #Matic, #ETH, #P2E, #ARGaming enthalten oder andere, die zum Inhalt des Textes gerade passen, aktuell hype sind, viele Nutzer anziehen oder in Nischen viel Aufmerksamkeit erhalten.
 
-Verwende frische und originelle Ansätze, um das Interesse der Zielgruppe zu wecken. Beginne den Tweet mit einer fesselnden Frage, einem starken Call-to-Action oder einer ungewöhnlichen Aussage. Wichtig: Achte darauf den Tweet weniger als 280 Zeichen lang ist und in ein Tweet passt von der länge.
-"""
-
+    Wichtig: Stelle sicher, dass jeder Abschnitt weniger als 280 Zeichen lang ist und als Teil eines Threads logisch fortgesetzt werden kann.
+    """
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -79,21 +74,27 @@ Verwende frische und originelle Ansätze, um das Interesse der Zielgruppe zu wec
                 {"role": "system", "content": "You are a creative social media assistant."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=100,
+            max_tokens=500,
             temperature=0.7,
         )
-        tweet = response["choices"][0]["message"]["content"].strip()
-        # Entferne umgebende Anführungszeichen, falls vorhanden
-        if tweet.startswith('"') and tweet.endswith('"'):
-            tweet = tweet[1:-1]
-        print(f"Generierter Tweet (vor Kürzung): {tweet} (Länge: {len(tweet)})")
-        # Kürze den Tweet auf maximal 280 Zeichen
-        tweet = textwrap.shorten(tweet, width=280, placeholder="...")
-        print(f"Tweet nach Kürzung: {tweet} (Länge: {len(tweet)})")
-        return tweet
+        long_text = response["choices"][0]["message"]["content"].strip()
+        print(f"Generierter langer Text: {long_text}")
+
+        # Splitte den langen Text in Abschnitte von maximal 280 Zeichen
+        tweets = textwrap.wrap(long_text, width=280, break_long_words=False)
+
+        # Poste die Tweets als Thread
+        previous_tweet_id = None
+        for i, tweet in enumerate(tweets):
+            if previous_tweet_id:
+                response = client.create_tweet(text=tweet, in_reply_to_tweet_id=previous_tweet_id)
+            else:
+                response = client.create_tweet(text=tweet)
+            print(f"Tweet {i+1} gepostet:", response.data)
+            previous_tweet_id = response.data["id"]
+
     except Exception as e:
-        print("Fehler bei der Generierung des Tweets mit GPT:", e)
-        return "Explore the world of Huntmon! 🌟 Dive into #Huntmon #BlockchainGaming #NFTGaming #PlayToEarn."
+        print("Fehler beim Generieren oder Posten des Threads:", e)
 
 # Hauptfunktion: Tweet posten
 def post_tweet():
@@ -110,16 +111,21 @@ def post_tweet():
         print("Kein Inhalt verfügbar. Der Prozess wird abgebrochen.")
         return
 
-    tweet = generate_tweet(whitepaper_content)
-    try:
-        response = client.create_tweet(text=tweet)
-        print("Tweet erfolgreich gepostet:", response.data)
-        save_current_chapter(chapter_number + 1)
-    except tweepy.errors.Forbidden as e:
-        print("Ein Fehler ist aufgetreten beim Posten des Tweets:", e)
-        print("Fehlerdetails:", e.response.text)
-    except Exception as e:
-        print("Ein unerwarteter Fehler ist aufgetreten:", e)
+    # Wähle zwischen Einzel-Tweet oder Thread
+    is_long_tweet = True  # Setze auf False, um normale Tweets zu posten
+    if is_long_tweet:
+        post_thread(whitepaper_content)
+    else:
+        tweet = generate_tweet(whitepaper_content)
+        try:
+            response = client.create_tweet(text=tweet)
+            print("Tweet erfolgreich gepostet:", response.data)
+            save_current_chapter(chapter_number + 1)
+        except tweepy.errors.Forbidden as e:
+            print("Ein Fehler ist aufgetreten beim Posten des Tweets:", e)
+            print("Fehlerdetails:", e.response.text)
+        except Exception as e:
+            print("Ein unerwarteter Fehler ist aufgetreten:", e)
 
 # Bot ausführen
 if __name__ == "__main__":
