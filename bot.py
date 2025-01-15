@@ -89,6 +89,7 @@ def download_image(image_url):
         response = requests.get(image_url, stream=True)
         if response.status_code == 200:
             image_path = os.path.join("temp_image", os.path.basename(image_url))
+            os.makedirs(os.path.dirname(image_path), exist_ok=True)
             with open(image_path, "wb") as file:
                 for chunk in response.iter_content(1024):
                     file.write(chunk)
@@ -113,7 +114,7 @@ def post_thread(whitepaper_content):
     {whitepaper_content}
 
     Write a longer, engaging text that can be split into multiple tweets. Each tweet should:
-    - Be concise and engaging.
+    - Flow logically into the next, forming a cohesive thread.
     - Include relevant hashtags like #Huntmon, #Matic, #ETH, #P2E, #ARGaming, or others that are viral or niche-specific.
     Ensure the tweets flow logically, allowing sentences to continue in the next tweet if necessary, and keep each segment under 280 characters.
     """
@@ -131,18 +132,8 @@ def post_thread(whitepaper_content):
         print(f"Generated long text: {long_text}")
         sys.stdout.flush()
 
-        # Split the text into segments of <=275 characters, allowing sentence continuation
-        tweets = []
-        words = long_text.split()
-        current_tweet = ""
-        for word in words:
-            if len(current_tweet) + len(word) + 1 <= 275:
-                current_tweet += (" " if current_tweet else "") + word
-            else:
-                tweets.append(current_tweet)
-                current_tweet = word
-        if current_tweet:
-            tweets.append(current_tweet)
+        # Split the text into segments of <=275 characters, ensuring continuation
+        tweets = textwrap.wrap(long_text, width=275, break_long_words=False)
 
         # Poste die Tweets als Thread
         previous_tweet_id = None
@@ -167,9 +158,9 @@ def post_thread(whitepaper_content):
             for attempt in range(3):  # Retry logic
                 try:
                     if i == 0 and media:  # Nur Bild im ersten Tweet
-                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", media_ids=[media.media_id])
+                        response = client.create_tweet(text=f"{tweet}", media_ids=[media.media_id])
                     else:
-                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", in_reply_to_tweet_id=previous_tweet_id)
+                        response = client.create_tweet(text=f"{tweet}", in_reply_to_tweet_id=previous_tweet_id)
 
                     print(f"Tweet {i+1} posted:", response.data)
                     sys.stdout.flush()
