@@ -3,10 +3,13 @@ name: Telegram Bot Scheduler
 on:
   schedule:
     # Führe den Bot zu den angegebenen Zeiten aus
+    - cron: "0 06 * * *"
     - cron: "0 08 * * *"
     - cron: "0 12 * * *"
     - cron: "0 16 * * *"
     - cron: "0 20 * * *"
+    - cron: "0 22 * * *"
+
   workflow_dispatch:
 
 jobs:
