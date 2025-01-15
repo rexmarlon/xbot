@@ -70,6 +70,16 @@ def get_random_image_url():
         print(f"Fehler beim Auswählen eines Bildes: {e}")
         return None
 
+# Rate-Limit-Status überprüfen
+def check_rate_limit():
+    try:
+        rate_limit_status = client.get_rate_limit_status()
+        print("Rate Limit Status:", rate_limit_status)
+        return rate_limit_status
+    except Exception as e:
+        print("Error fetching rate limit status:", e)
+        return None
+
 # GPT-gestütztes Tweet-Generieren
 def generate_tweet(whitepaper_content):
     prompt = f"""
@@ -111,6 +121,13 @@ def post_tweet():
 
     if not whitepaper_content:
         print("No content available. Aborting process.")
+        return
+
+    # Check rate limit before posting
+    rate_limit_status = check_rate_limit()
+    if rate_limit_status and rate_limit_status.get("resources", {}).get("statuses", {}).get("/statuses/update", {}).get("remaining", 0) == 0:
+        print("Rate limit reached. Sleeping for 15 minutes.")
+        time.sleep(900)  # Sleep for 15 minutes
         return
 
     tweet = generate_tweet(whitepaper_content)
