@@ -73,81 +73,8 @@ def get_random_image_url():
 # Rate-Limit-Status überprüfen
 def check_rate_limit():
     try:
-        rate_limit_status = client.get_rate_limit_status()
-        print("Rate Limit Status:", rate_limit_status)
-        return rate_limit_status
-    except Exception as e:
-        print("Error fetching rate limit status:", e)
-        return None
-
-# GPT-gestütztes Tweet-Generieren
-def generate_tweet(whitepaper_content):
-    prompt = f"""
-    You are a creative social media manager for Huntmon. Based on the following content from the whitepaper:
-    {whitepaper_content}
-
-    Write a short, engaging tweet on this topic. The tweet should:
-    - Be concise (less than 280 characters).
-    - Spark curiosity among readers.
-    - Include relevant hashtags like #Huntmon, #Matic, #ETH, #P2E, #ARGaming, or others that are currently viral, attract attention, or are niche-specific.
-    """
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a creative social media assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=100,
-            temperature=0.7,
-        )
-        tweet = response["choices"][0]["message"]["content"].strip()
-        print(f"Generated tweet: {tweet}")
-        return tweet
-    except Exception as e:
-        print("Error generating tweet with GPT:", e)
-        return "Explore the innovative world of Huntmon! Join the adventure today. #Huntmon #Gaming"
-
-# Hauptfunktion: Tweet posten
-def post_tweet():
-    chapter_number = load_current_chapter()
-    whitepaper_content = read_chapter_content(chapter_number)
-
-    if not whitepaper_content:
-        print(f"Chapter {chapter_number} not found. Resetting to chapter 1.")
-        chapter_number = 1
-        save_current_chapter(chapter_number)
-        whitepaper_content = read_chapter_content(chapter_number)
-
-    if not whitepaper_content:
-        print("No content available. Aborting process.")
-        return
-
-    # Check rate limit before posting
-    rate_limit_status = check_rate_limit()
-    if rate_limit_status and rate_limit_status.get("resources", {}).get("statuses", {}).get("/statuses/update", {}).get("remaining", 0) == 0:
-        print("Rate limit reached. Sleeping for 15 minutes.")
-        time.sleep(900)  # Sleep for 15 minutes
-        return
-
-    tweet = generate_tweet(whitepaper_content)
-    try:
-        # Select a random image URL
-        image_url = get_random_image_url()
-        tweet_with_image = f"{tweet}\n\n{image_url}" if image_url else tweet
-
-        response = client.create_tweet(text=tweet_with_image)
-        print("Tweet successfully posted:", response.data)
-        save_current_chapter(chapter_number + 1)
-    except tweepy.errors.TooManyRequests:
-        print("Rate limit reached. Sleeping for 15 minutes.")
-        time.sleep(900)  # Sleep for 15 minutes
-    except tweepy.errors.Forbidden as e:
-        print("Error posting tweet:", e)
-        print("Details:", e.response.text)
-    except Exception as e:
-        print("An unexpected error occurred:", e)
-
-# Bot ausführen
-if __name__ == "__main__":
-    post_tweet()
+        print("Überprüfe Rate-Limit-Status...")
+        # Fallback-Logik: Falls get_rate_limit_status nicht unterstützt wird
+        # Alternativ können hier statische Wartezeiten eingebaut werden
+        print("Rate-Limit-Überprüfung nicht implementiert; Standard fort.")
+        print('Rate einstellungen bleiben als fallback festgelegt")
