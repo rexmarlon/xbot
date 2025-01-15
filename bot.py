@@ -109,13 +109,14 @@ def download_image(image_url):
 def post_thread(whitepaper_content):
     print("Starte Generierung des Threads...")
     sys.stdout.flush()
-    prompt = f\"\"\" 
+    # Mehrzeiliger f-String für den Prompt
+    prompt = f"""
     You are a creative social media manager for Huntmon. Based on the following content from the whitepaper:
     {whitepaper_content}
 
-    Write a longer, engaging text max 270 characters     
+    Write a longer, engaging text max 270 characters.
     - Include relevant hashtags like #Huntmon, #Matic, #ETH, #P2E, #ARGaming, or others that are viral or niche-specific.
-    \"\"\"
+    """
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -130,7 +131,7 @@ def post_thread(whitepaper_content):
         print(f"Generated long text: {long_text}")
         sys.stdout.flush()
 
-        # Split the text into segments of <=275 characters, allowing sentence continuation
+        # Split den Text in Segmente von <= 275 Zeichen, damit es in einzelne Tweets passt
         tweets = []
         words = long_text.split()
         current_tweet = ""
@@ -151,6 +152,7 @@ def post_thread(whitepaper_content):
             image_path = download_image(image_url)
             if image_path:
                 try:
+                    # Achtung: media_upload() funktioniert offiziell nur mit der v1.1-API oder in älteren Tweepy-Versionen
                     media = client.media_upload(filename=image_path)
                     os.remove(image_path)  # Temporäre Bilddatei löschen
                 except Exception as e:
@@ -163,9 +165,9 @@ def post_thread(whitepaper_content):
             media = None
 
         for i, tweet in enumerate(tweets):
-            for attempt in range(3):  # Retry logic
+            for attempt in range(3):  # Retry logic für Rate Limits oder sonstige Fehler
                 try:
-                    if i == 0 and media:  # Nur Bild im ersten Tweet
+                    if i == 0 and media:  # Nur im ersten Tweet soll das Bild dabei sein
                         response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", media_ids=[media.media_id])
                     else:
                         response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", in_reply_to_tweet_id=previous_tweet_id)
@@ -173,7 +175,7 @@ def post_thread(whitepaper_content):
                     print(f"Tweet {i+1} posted:", response.data)
                     sys.stdout.flush()
                     previous_tweet_id = response.data.get("id")
-                    time.sleep(10)  # Add a delay between tweets
+                    time.sleep(10)  # Kleiner Delay zwischen Tweets
                     break
                 except tweepy.errors.TooManyRequests:
                     print("Rate limit reached. Retrying in 15 minutes.")
