@@ -1,33 +1,37 @@
-import tweepy
-import openai
 import os
-import textwrap
-import time
 import random
-import requests
+import time
+import openai
+import tweepy
 import sys
 
-# OpenAI API-Key laden
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# ENV-Variablen aus GitHub Secrets
+CONSUMER_KEY = os.getenv("API_KEY")
+CONSUMER_SECRET = os.getenv("API_SECRET")
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+ACCESS_SECRET = os.getenv("ACCESS_SECRET")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Twitter API-Schlüssel aus Umgebungsvariablen laden
-client = tweepy.Client(
-    bearer_token=os.getenv("BEARER_TOKEN"),
-    consumer_key=os.getenv("API_KEY"),
-    consumer_secret=os.getenv("API_SECRET"),
-    access_token=os.getenv("ACCESS_TOKEN"),
-    access_token_secret=os.getenv("ACCESS_SECRET"),
+# Auth v1.1 (klassisch)
+auth = tweepy.OAuth1UserHandler(
+    consumer_key=CONSUMER_KEY,
+    consumer_secret=CONSUMER_SECRET,
+    access_token=ACCESS_TOKEN,
+    access_token_secret=ACCESS_SECRET,
 )
+
+api = tweepy.API(auth)  # <-- v1.1-API
+openai.api_key = OPENAI_API_KEY
 
 CHAPTER_FILE = "current_chapter.txt"
 CHAPTER_DIRECTORY = "."
-IMAGES_DIRECTORY = "images"  # lokaler Ordner
+IMAGES_DIRECTORY = "images"
 
 def load_current_chapter():
     print(f"Lade Kapitelnummer aus {CHAPTER_FILE}")
     sys.stdout.flush()
     if os.path.exists(CHAPTER_FILE):
-        with open(CHAPTER_FILE, "r") as file:
+        with open(CHAPTER_FILE, "r", encoding="utf-8") as file:
             content = file.read().strip()
             print(f"Inhalt der geladenen Datei: {content}")
             sys.stdout.flush()
@@ -40,9 +44,9 @@ def save_current_chapter(chapter_number):
     print(f"Speichere Kapitelnummer: {chapter_number} in {CHAPTER_FILE}")
     sys.stdout.flush()
     try:
-        with open(CHAPTER_FILE, "w") as file:
+        with open(CHAPTER_FILE, "w", encoding="utf-8") as file:
             file.write(str(chapter_number))
-        with open(CHAPTER_FILE, "r") as file:
+        with open(CHAPTER_FILE, "r", encoding="utf-8") as file:
             content = file.read().strip()
         print(f"Inhalt der Datei nach dem Schreiben: {content}")
         sys.stdout.flush()
@@ -62,7 +66,6 @@ def read_chapter_content(chapter_number):
 
 def get_random_image_path():
     try:
-        # Liste alle PNG/JPG/JPEG im Ordner 'images'
         images = [f for f in os.listdir(IMAGES_DIRECTORY) if f.lower().endswith((".png", ".jpg", ".jpeg"))]
         if not images:
             print("Keine Bilder im Verzeichnis gefunden.")
@@ -81,14 +84,17 @@ def get_random_image_path():
 def post_thread(whitepaper_content):
     print("Starte Generierung des Threads...")
     sys.stdout.flush()
+
     prompt = f"""
     You are a creative social media manager for Huntmon. Based on the following content from the whitepaper:
     {whitepaper_content}
 
-    Write a longer, engaging text max 270 characters.
-    - Include relevant hashtags like #Huntmon, #Matic, #ETH, #P2E, #ARGaming, or others that are viral or niche-specific.
+    Write a longer, engaging text (max ~270 characters).
+    Include relevant hashtags: #Huntmon, #Matic, #ETH, #P2E, #ARGaming, etc.
     """
+
     try:
+        # GPT-Aufruf
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -102,7 +108,7 @@ def post_thread(whitepaper_content):
         print(f"Generated long text: {long_text}")
         sys.stdout.flush()
 
-        # Split in <=275 Zeichen pro Tweet
+        # In 275-Char-Tweets aufteilen
         tweets = []
         words = long_text.split()
         current_tweet = ""
@@ -115,13 +121,11 @@ def post_thread(whitepaper_content):
         if current_tweet:
             tweets.append(current_tweet)
 
-        previous_tweet_id = None
+        # Bild hochladen (v1.1)
         image_path = get_random_image_path()
-
-        # Bild hochladen, falls vorhanden
         if image_path:
             try:
-                media = client.media_upload(filename=image_path)
+                media = api.media_upload(image_path)
             except Exception as e:
                 print(f"Fehler beim Hochladen des lokalen Bildes: {e}")
                 sys.stdout.flush()
@@ -129,40 +133,55 @@ def post_thread(whitepaper_content):
         else:
             media = None
 
-        # Tweets abschicken
+        # Tweets posten (v1.1)
+        # Thread -> jeder Tweet "reply" auf den vorherigen
+        reply_to = None
         for i, tweet in enumerate(tweets):
-            for attempt in range(3):
+            for attempt in range(3):  # Retry logic
                 try:
-                    if i == 0 and media:
-                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})",
-                                                       media_ids=[media.media_id])
+                    if i == 0:
+                        # Beim ersten Tweet ggf. mit Bild
+                        if media:
+                            status = api.update_status(
+                                status=f"{tweet} ({i+1}/{len(tweets)})",
+                                media_ids=[media.media_id_string]
+                            )
+                        else:
+                            status = api.update_status(
+                                status=f"{tweet} ({i+1}/{len(tweets)})"
+                            )
+                        reply_to = status.id
                     else:
-                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})",
-                                                       in_reply_to_tweet_id=previous_tweet_id)
+                        status = api.update_status(
+                            status=f"{tweet} ({i+1}/{len(tweets)})",
+                            in_reply_to_status_id=reply_to,
+                            auto_populate_reply_metadata=True
+                        )
+                        reply_to = status.id
 
-                    print(f"Tweet {i+1} posted:", response.data)
+                    print(f"Tweet {i+1} posted: {status.id}")
                     sys.stdout.flush()
-                    previous_tweet_id = response.data.get("id")
                     time.sleep(10)
                     break
-                except tweepy.errors.TooManyRequests:
-                    print("Rate limit reached. Retrying in 15 minutes.")
+                except tweepy.TweepyException as ex:
+                    print(f"Error posting tweet {i+1}: {ex}")
                     sys.stdout.flush()
-                    for _ in range(15):
-                        print("Sleeping 1 minute...")
-                        sys.stdout.flush()
-                        time.sleep(60)
-                except Exception as e:
-                    print(f"Error posting tweet {i+1}: {e}")
-                    sys.stdout.flush()
-                    if attempt < 2:
-                        print("Retrying...")
-                        sys.stdout.flush()
-                        time.sleep(10)
+                    if "429" in str(ex):
+                        # Rate limit -> 15 Minuten Pause
+                        print("Rate limit reached. Retrying in 15 minutes.")
+                        for _ in range(15):
+                            print("Sleeping 1 minute...")
+                            sys.stdout.flush()
+                            time.sleep(60)
                     else:
-                        print("Aborting after 3 attempts.")
-                        sys.stdout.flush()
-                        return
+                        if attempt < 2:
+                            print("Retrying in 10s...")
+                            sys.stdout.flush()
+                            time.sleep(10)
+                        else:
+                            print("Aborting after 3 attempts.")
+                            sys.stdout.flush()
+                            return
     except Exception as e:
         print("Error generating or posting the thread:", e)
         sys.stdout.flush()
@@ -170,6 +189,7 @@ def post_thread(whitepaper_content):
 def post_tweet():
     print("Start: Post-Tweet-Prozess")
     sys.stdout.flush()
+
     chapter_number = load_current_chapter()
     whitepaper_content = read_chapter_content(chapter_number)
 
@@ -186,6 +206,9 @@ def post_tweet():
         return
 
     post_thread(whitepaper_content)
+    # Wenn alles geklappt hat, Kapitelnummer hochzählen
+    new_chapter = chapter_number + 1
+    save_current_chapter(new_chapter)
 
 if __name__ == "__main__":
     post_tweet()
