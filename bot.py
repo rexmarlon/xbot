@@ -83,7 +83,7 @@ def post_thread(whitepaper_content):
     - Use varied and engaging language.
     - Include relevant hashtags like #Huntmon, #Matic, #ETH, #P2E, #ARGaming, or others that are currently viral, attract attention, or are niche-specific.
 
-    Ensure tweets flow logically, allowing sentences to continue in the next tweet if necessary, and keep each segment under 280 characters.
+    Ensure tweets flow logically, allowing sentences to continue in the next tweet if necessary, and keep each segment under 280 characters and the toal lenght under 1000 characters.
     """
     try:
         response = openai.ChatCompletion.create(
