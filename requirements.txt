@@ -1,4 +1,4 @@
 tweepy
-openai
+openai==0.28
 python-telegram-bot
 requests
