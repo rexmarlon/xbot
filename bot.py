@@ -19,13 +19,10 @@ client = tweepy.Client(
     access_token_secret=os.getenv("ACCESS_SECRET"),
 )
 
-# Pfad zur Datei, in der das aktuelle Kapitel gespeichert wird
 CHAPTER_FILE = "current_chapter.txt"
 CHAPTER_DIRECTORY = "."
-IMAGES_DIRECTORY = "images"
-GITHUB_BASE_URL = "https://raw.githubusercontent.com/rexmarlon/xbot/main/images/"
+IMAGES_DIRECTORY = "images"  # lokaler Ordner
 
-# Aktuelles Kapitel laden oder mit Kapitel 1 starten
 def load_current_chapter():
     print(f"Lade Kapitelnummer aus {CHAPTER_FILE}")
     sys.stdout.flush()
@@ -39,7 +36,6 @@ def load_current_chapter():
     sys.stdout.flush()
     return 1
 
-# Aktuelles Kapitel speichern
 def save_current_chapter(chapter_number):
     print(f"Speichere Kapitelnummer: {chapter_number} in {CHAPTER_FILE}")
     sys.stdout.flush()
@@ -54,7 +50,6 @@ def save_current_chapter(chapter_number):
         print(f"Fehler beim Schreiben in {CHAPTER_FILE}: {e}")
         sys.stdout.flush()
 
-# Kapitelinhalt aus einer Datei laden
 def read_chapter_content(chapter_number):
     chapter_filename = os.path.join(CHAPTER_DIRECTORY, f"Kapitel-{chapter_number}.txt")
     if os.path.exists(chapter_filename):
@@ -65,51 +60,27 @@ def read_chapter_content(chapter_number):
         sys.stdout.flush()
         return None
 
-# Zufälligen Bild-Link aus dem GitHub-Repository auswählen
-def get_random_image_url():
+def get_random_image_path():
     try:
-        images = [f for f in os.listdir(IMAGES_DIRECTORY) if f.endswith((".png", ".jpg", ".jpeg"))]
+        # Liste alle PNG/JPG/JPEG im Ordner 'images'
+        images = [f for f in os.listdir(IMAGES_DIRECTORY) if f.lower().endswith((".png", ".jpg", ".jpeg"))]
         if not images:
             print("Keine Bilder im Verzeichnis gefunden.")
             sys.stdout.flush()
             return None
         random_image = random.choice(images)
-        image_url = GITHUB_BASE_URL + random_image
-        print(f"Zufällig ausgewähltes Bild: {image_url}")
+        image_path = os.path.join(IMAGES_DIRECTORY, random_image)
+        print(f"Zufällig ausgewähltes lokales Bild: {image_path}")
         sys.stdout.flush()
-        return image_url
+        return image_path
     except Exception as e:
         print(f"Fehler beim Abrufen des Bildes: {e}")
         sys.stdout.flush()
         return None
 
-# Bild von GitHub herunterladen und als Datei speichern
-def download_image(image_url):
-    try:
-        response = requests.get(image_url, stream=True)
-        if response.status_code == 200:
-            image_path = os.path.join("temp_image", os.path.basename(image_url))
-            os.makedirs(os.path.dirname(image_path), exist_ok=True)
-            with open(image_path, "wb") as file:
-                for chunk in response.iter_content(1024):
-                    file.write(chunk)
-            print(f"Bild heruntergeladen: {image_path}")
-            sys.stdout.flush()
-            return image_path
-        else:
-            print(f"Fehler beim Herunterladen des Bildes. Statuscode: {response.status_code}")
-            sys.stdout.flush()
-            return None
-    except Exception as e:
-        print(f"Fehler beim Herunterladen des Bildes: {e}")
-        sys.stdout.flush()
-        return None
-
-# GPT-gestütztes Thread-Generieren und Posten
 def post_thread(whitepaper_content):
     print("Starte Generierung des Threads...")
     sys.stdout.flush()
-    # Mehrzeiliger f-String für den Prompt
     prompt = f"""
     You are a creative social media manager for Huntmon. Based on the following content from the whitepaper:
     {whitepaper_content}
@@ -131,7 +102,7 @@ def post_thread(whitepaper_content):
         print(f"Generated long text: {long_text}")
         sys.stdout.flush()
 
-        # Split den Text in Segmente von <= 275 Zeichen, damit es in einzelne Tweets passt
+        # Split in <=275 Zeichen pro Tweet
         tweets = []
         words = long_text.split()
         current_tweet = ""
@@ -144,44 +115,41 @@ def post_thread(whitepaper_content):
         if current_tweet:
             tweets.append(current_tweet)
 
-        # Poste die Tweets als Thread
         previous_tweet_id = None
-        image_url = get_random_image_url()  # GitHub-Bild-URL abrufen
+        image_path = get_random_image_path()
 
-        if image_url:
-            image_path = download_image(image_url)
-            if image_path:
-                try:
-                    # Achtung: media_upload() funktioniert offiziell nur mit der v1.1-API oder in älteren Tweepy-Versionen
-                    media = client.media_upload(filename=image_path)
-                    os.remove(image_path)  # Temporäre Bilddatei löschen
-                except Exception as e:
-                    print(f"Fehler beim Hochladen des heruntergeladenen Bildes: {e}")
-                    sys.stdout.flush()
-                    media = None
-            else:
+        # Bild hochladen, falls vorhanden
+        if image_path:
+            try:
+                media = client.media_upload(filename=image_path)
+            except Exception as e:
+                print(f"Fehler beim Hochladen des lokalen Bildes: {e}")
+                sys.stdout.flush()
                 media = None
         else:
             media = None
 
+        # Tweets abschicken
         for i, tweet in enumerate(tweets):
-            for attempt in range(3):  # Retry logic für Rate Limits oder sonstige Fehler
+            for attempt in range(3):
                 try:
-                    if i == 0 and media:  # Nur im ersten Tweet soll das Bild dabei sein
-                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", media_ids=[media.media_id])
+                    if i == 0 and media:
+                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})",
+                                                       media_ids=[media.media_id])
                     else:
-                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})", in_reply_to_tweet_id=previous_tweet_id)
+                        response = client.create_tweet(text=f"{tweet} ({i+1}/{len(tweets)})",
+                                                       in_reply_to_tweet_id=previous_tweet_id)
 
                     print(f"Tweet {i+1} posted:", response.data)
                     sys.stdout.flush()
                     previous_tweet_id = response.data.get("id")
-                    time.sleep(10)  # Kleiner Delay zwischen Tweets
+                    time.sleep(10)
                     break
                 except tweepy.errors.TooManyRequests:
                     print("Rate limit reached. Retrying in 15 minutes.")
                     sys.stdout.flush()
-                    for j in range(15):
-                        print(f"Sleeping... {15 - j} minutes remaining.")
+                    for _ in range(15):
+                        print("Sleeping 1 minute...")
                         sys.stdout.flush()
                         time.sleep(60)
                 except Exception as e:
@@ -199,7 +167,6 @@ def post_thread(whitepaper_content):
         print("Error generating or posting the thread:", e)
         sys.stdout.flush()
 
-# Hauptfunktion: Tweet posten
 def post_tweet():
     print("Start: Post-Tweet-Prozess")
     sys.stdout.flush()
@@ -220,6 +187,5 @@ def post_tweet():
 
     post_thread(whitepaper_content)
 
-# Bot ausführen
 if __name__ == "__main__":
     post_tweet()
