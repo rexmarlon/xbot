@@ -75,14 +75,13 @@ def check_rate_limit():
     try:
         print("Überprüfe Rate-Limit-Status...")
         # Fallback-Logik: Falls get_rate_limit_status nicht unterstützt wird
-        # Alternativ können hier statische Wartezeiten eingebaut werden
         print("Rate-Limit-Überprüfung nicht implementiert; Standard fort.")
-        print("Rate-Einstellungen bleiben als Fallback festgelegt.")
     except Exception as e:
         print(f"Fehler beim Überprüfen des Rate-Limits: {e}")
 
 # GPT-gestütztes Tweet-Generieren
 def generate_tweet(whitepaper_content):
+    print("Starte Generierung des Tweets...")
     prompt = f"""
     You are a creative social media manager for Huntmon. Based on the following content from the whitepaper:
     {whitepaper_content}
@@ -111,6 +110,7 @@ def generate_tweet(whitepaper_content):
 
 # Hauptfunktion: Tweet posten
 def post_tweet():
+    print("Start: Post-Tweet-Prozess")
     chapter_number = load_current_chapter()
     whitepaper_content = read_chapter_content(chapter_number)
 
@@ -129,12 +129,13 @@ def post_tweet():
 
     tweet = generate_tweet(whitepaper_content)
     try:
+        print("Versuche, den Tweet zu posten...")
         # Select a random image URL
         image_url = get_random_image_url()
         tweet_with_image = f"{tweet}\n\n{image_url}" if image_url else tweet
 
         response = client.create_tweet(text=tweet_with_image)
-        print("Tweet successfully posted:", response.data)
+        print("Tweet erfolgreich gepostet:", response.data)
         save_current_chapter(chapter_number + 1)
     except tweepy.errors.TooManyRequests:
         print("Rate limit reached. Sleeping for 15 minutes.")
