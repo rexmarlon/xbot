@@ -178,6 +178,12 @@ def post_to_telegram():
 
     send_thread_to_telegram(whitepaper_content)
 
+    # Aktualisiere das Kapitel
+    save_current_chapter(chapter_number + 1)
+    print(f"Kapitel aktualisiert auf: {chapter_number + 1}")
+    sys.stdout.flush()
+
+
 # Bot ausführen
 if __name__ == "__main__":
     post_to_telegram()
