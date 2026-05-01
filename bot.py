@@ -142,7 +142,11 @@ def send_thread_to_telegram(whitepaper_content):
         # Sende die Tweets als Nachrichten an Telegram
         image_url = get_random_image_url()  # GitHub-Bild-URL abrufen
         if image_url:
-            telegram_bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"📷 Image: {image_url}")
+            image_path = download_image(image_url)
+            if image_path:
+                with open(image_path, "rb") as img_file:
+                    telegram_bot.send_photo(chat_id=TELEGRAM_CHAT_ID, photo=img_file)
+                os.remove(image_path)
 
         for i, tweet in enumerate(tweets):
             try:
